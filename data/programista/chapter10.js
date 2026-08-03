@@ -13,9 +13,9 @@ window.CHAPTER_10 = {
     },
     {
       "type": "image",
-      "src": "diploma-moment",
-      "alt": "Dyplom",
-      "caption": "Dyplom Młodego Programisty."
+      "src": "max-diploma",
+      "alt": "Dyplom Młodego Programisty — chwila dumy.",
+      "caption": "Dyplom Młodego Programisty — chwila dumy."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_10 = {
     },
     {
       "type": "image",
-      "src": "big-project",
-      "alt": "Droga",
-      "caption": "Start kolejnych książek."
+      "src": "max-big-project",
+      "alt": "Max pokazuje rodzinie swój wielki projekt.",
+      "caption": "Max pokazuje rodzinie swój wielki projekt."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_10 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Koniec?",
-      "caption": "Do zobaczenia w kolejnej książce…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Programista",
-      "image": "words/programmer",
       "icon": "book",
       "what": "Tworzy programy.",
       "why": "Gry i roboty.",
@@ -54,7 +53,6 @@ window.CHAPTER_10 = {
     },
     {
       "term": "Kompetencja",
-      "image": "words/competence",
       "icon": "book",
       "what": "Umiejętność w praktyce.",
       "why": "Wiem i potrafię.",
@@ -67,7 +65,6 @@ window.CHAPTER_10 = {
     },
     {
       "term": "Portfolio",
-      "image": "words/portfolio",
       "icon": "book",
       "what": "Zbiór projektów.",
       "why": "Pokaz drogi.",

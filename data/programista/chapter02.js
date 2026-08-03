@@ -13,9 +13,9 @@ window.CHAPTER_02 = {
     },
     {
       "type": "image",
-      "src": "terminal-glow",
-      "alt": "Terminal",
-      "caption": "Terminal świeci jak tajemne okno."
+      "src": "max-at-terminal",
+      "alt": "Max rozmawia z komputerem przez terminal.",
+      "caption": "Max rozmawia z komputerem przez terminal."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_02 = {
     },
     {
       "type": "image",
-      "src": "desk-setup",
-      "alt": "Ćwiczenie",
-      "caption": "Max ćwiczy komendy przy Pi 5."
+      "src": "dad-helps-setup",
+      "alt": "Tata pomaga podłączyć komputer przy biurku.",
+      "caption": "Tata pomaga podłączyć komputer przy biurku."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_02 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Cliff",
-      "caption": "Komunikat urywa się w pół zdania…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Terminal",
-      "image": "words/terminal",
       "icon": "book",
       "what": "Program do komend tekstowych.",
       "why": "Szybkie sterowanie systemem.",
@@ -54,7 +53,6 @@ window.CHAPTER_02 = {
     },
     {
       "term": "Komenda",
-      "image": "words/command",
       "icon": "book",
       "what": "Dokładne krótkie polecenie.",
       "why": "Foldery, programy, diagnostyka.",
@@ -67,7 +65,6 @@ window.CHAPTER_02 = {
     },
     {
       "term": "pwd / ls",
-      "image": "words/command",
       "icon": "book",
       "what": "pwd — gdzie jesteś; ls — lista plików.",
       "why": "Nawigacja.",

@@ -13,9 +13,9 @@ window.CHAPTER_04 = {
     },
     {
       "type": "image",
-      "src": "led-glow",
-      "alt": "LED",
-      "caption": "Pierwsze światło sterowane przez Pi 5."
+      "src": "max-led-light",
+      "alt": "Pierwsze światło — Max i tata przy diodzie LED.",
+      "caption": "Pierwsze światło — Max i tata przy diodzie LED."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_04 = {
     },
     {
       "type": "image",
-      "src": "pi5-hero",
-      "alt": "GPIO",
-      "caption": "Czarny Pi 5 podłączony do diody."
+      "src": "dad-helps-setup",
+      "alt": "Tata pomaga przy połączeniach — ostrożnie i razem.",
+      "caption": "Tata pomaga przy połączeniach — ostrożnie i razem."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_04 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Robot",
-      "caption": "Na biurku czeka rama robota…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "LED",
-      "image": "words/led",
       "icon": "book",
       "what": "Dioda świecąca.",
       "why": "Sygnał.",
@@ -54,7 +53,6 @@ window.CHAPTER_04 = {
     },
     {
       "term": "GPIO",
-      "image": "words/gpio",
       "icon": "book",
       "what": "Piny Pi.",
       "why": "Sprzęt zewnętrzny.",
@@ -67,7 +65,6 @@ window.CHAPTER_04 = {
     },
     {
       "term": "Rezystor",
-      "image": "words/resistor",
       "icon": "book",
       "what": "Ogranicza prąd.",
       "why": "Chroni LED.",

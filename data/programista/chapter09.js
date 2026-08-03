@@ -13,9 +13,9 @@ window.CHAPTER_09 = {
     },
     {
       "type": "image",
-      "src": "big-project",
-      "alt": "Projekt",
-      "caption": "Wszystkie umiejętności w jednej misji."
+      "src": "max-big-project",
+      "alt": "Max pokazuje rodzinie swój wielki projekt.",
+      "caption": "Max pokazuje rodzinie swój wielki projekt."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_09 = {
     },
     {
       "type": "image",
-      "src": "robot-roll",
-      "alt": "Iteracje",
-      "caption": "Poprawki budują mistrzostwo."
+      "src": "max-with-robot",
+      "alt": "Max i jego robot na dywanie w pokoju.",
+      "caption": "Max i jego robot na dywanie w pokoju."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_09 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Dyplom",
-      "caption": "Gotowy do dyplomu?"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Projekt",
-      "image": "words/project",
       "icon": "book",
       "what": "Cel i efekt.",
       "why": "Pomysł→wynik.",
@@ -54,7 +53,6 @@ window.CHAPTER_09 = {
     },
     {
       "term": "Iteracja",
-      "image": "words/iteration",
       "icon": "book",
       "what": "Wersja po poprawkach.",
       "why": "Testy.",
@@ -67,7 +65,6 @@ window.CHAPTER_09 = {
     },
     {
       "term": "Log",
-      "image": "words/log",
       "icon": "book",
       "what": "Dziennik zdarzeń.",
       "why": "Analiza.",

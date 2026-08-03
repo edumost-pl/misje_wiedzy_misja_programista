@@ -13,9 +13,9 @@ window.CHAPTER_05 = {
     },
     {
       "type": "image",
-      "src": "robot-roll",
-      "alt": "Robot",
-      "caption": "Robot uczy się unikać przeszkód."
+      "src": "max-with-robot",
+      "alt": "Max i jego robot na dywanie w pokoju.",
+      "caption": "Max i jego robot na dywanie w pokoju."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_05 = {
     },
     {
       "type": "image",
-      "src": "led-glow",
-      "alt": "Testy",
-      "caption": "Sygnały i logika razem."
+      "src": "max-led-light",
+      "alt": "Pierwsze światło — Max i tata przy diodzie LED.",
+      "caption": "Pierwsze światło — Max i tata przy diodzie LED."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_05 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Kamera",
-      "caption": "Coś ruszyło się przy szafie…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Silnik",
-      "image": "words/motor",
       "icon": "book",
       "what": "Prąd → ruch.",
       "why": "Jazda robota.",
@@ -54,7 +53,6 @@ window.CHAPTER_05 = {
     },
     {
       "term": "Czujnik",
-      "image": "words/sensor",
       "icon": "book",
       "what": "Dane ze środowiska.",
       "why": "Zmysł.",
@@ -67,7 +65,6 @@ window.CHAPTER_05 = {
     },
     {
       "term": "Algorytm",
-      "image": "words/algorithm",
       "icon": "book",
       "what": "Plan kroków.",
       "why": "Baza programu.",

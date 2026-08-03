@@ -13,9 +13,9 @@ window.CHAPTER_07 = {
     },
     {
       "type": "image",
-      "src": "python-magic",
-      "alt": "Python",
-      "caption": "Pierwsze słowa w Pythonie."
+      "src": "max-coding-python",
+      "alt": "Pierwszy program w Pythonie ożywa na ekranie.",
+      "caption": "Pierwszy program w Pythonie ożywa na ekranie."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_07 = {
     },
     {
       "type": "image",
-      "src": "terminal-glow",
-      "alt": "Debug",
-      "caption": "Każdy błąd to wskazówka."
+      "src": "max-at-terminal",
+      "alt": "Max rozmawia z komputerem przez terminal.",
+      "caption": "Max rozmawia z komputerem przez terminal."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_07 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Serwer",
-      "caption": "Minecraft i serwer…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Python",
-      "image": "words/python",
       "icon": "book",
       "what": "Język programowania.",
       "why": "Nauka i Pi.",
@@ -54,7 +53,6 @@ window.CHAPTER_07 = {
     },
     {
       "term": "Zmienna",
-      "image": "words/variable",
       "icon": "book",
       "what": "Miejsce na wartość.",
       "why": "Pamięć programu.",
@@ -67,7 +65,6 @@ window.CHAPTER_07 = {
     },
     {
       "term": "Debugowanie",
-      "image": "words/debug",
       "icon": "book",
       "what": "Poprawianie błędów.",
       "why": "Nauka na pomyłkach.",

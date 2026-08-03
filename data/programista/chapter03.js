@@ -13,9 +13,9 @@ window.CHAPTER_03 = {
     },
     {
       "type": "image",
-      "src": "folder-maze",
-      "alt": "Foldery",
-      "caption": "Foldery jak szuflady — każda ma adres."
+      "src": "max-exploring-folders",
+      "alt": "Max szuka plików jak detektyw w folderach.",
+      "caption": "Max szuka plików jak detektyw w folderach."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_03 = {
     },
     {
       "type": "image",
-      "src": "terminal-glow",
-      "alt": "Ścieżka",
-      "caption": "cd przenosi do innego folderu."
+      "src": "max-at-terminal",
+      "alt": "Max rozmawia z komputerem przez terminal.",
+      "caption": "Max rozmawia z komputerem przez terminal."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_03 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Dalej",
-      "caption": "Plik led.plan czeka…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Folder",
-      "image": "words/folder",
       "icon": "book",
       "what": "Pojemnik na pliki.",
       "why": "Porządek.",
@@ -54,7 +53,6 @@ window.CHAPTER_03 = {
     },
     {
       "term": "Ścieżka",
-      "image": "words/path",
       "icon": "book",
       "what": "Adres w systemie.",
       "why": "Znajdowanie plików.",
@@ -67,7 +65,6 @@ window.CHAPTER_03 = {
     },
     {
       "term": "cd / mkdir",
-      "image": "words/terminal",
       "icon": "book",
       "what": "cd zmienia; mkdir tworzy.",
       "why": "Organizacja.",

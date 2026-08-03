@@ -13,9 +13,9 @@ window.CHAPTER_08 = {
     },
     {
       "type": "image",
-      "src": "minecraft-world",
-      "alt": "Minecraft",
-      "caption": "Wspólny świat na Pi 5."
+      "src": "max-minecraft-server",
+      "alt": "Wspólna gra — serwer działa w domu Maksa.",
+      "caption": "Wspólna gra — serwer działa w domu Maksa."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_08 = {
     },
     {
       "type": "image",
-      "src": "big-project",
-      "alt": "Sieć",
-      "caption": "Gdy serwer działa, gra jest spotkaniem."
+      "src": "max-big-project",
+      "alt": "Max pokazuje rodzinie swój wielki projekt.",
+      "caption": "Max pokazuje rodzinie swój wielki projekt."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_08 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Projekt",
-      "caption": "Połącz wszystko…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Serwer",
-      "image": "words/server",
       "icon": "book",
       "what": "Udostępnia usługi.",
       "why": "Gra/pliki.",
@@ -54,7 +53,6 @@ window.CHAPTER_08 = {
     },
     {
       "term": "Sieć",
-      "image": "words/network",
       "icon": "book",
       "what": "Połączenie urządzeń.",
       "why": "Wspólna gra.",
@@ -67,7 +65,6 @@ window.CHAPTER_08 = {
     },
     {
       "term": "Adres IP",
-      "image": "words/ip",
       "icon": "book",
       "what": "Numer w sieci.",
       "why": "Cel danych.",

@@ -14,8 +14,8 @@ window.CHAPTER_01 = {
     {
       "type": "image",
       "src": "max-opens-box",
-      "alt": "Max",
-      "caption": "Max otwiera pudełko jak skarb odkrywcy."
+      "alt": "Max otwiera tajemnicze pudełko w swoim pokoju.",
+      "caption": "Max otwiera tajemnicze pudełko w swoim pokoju."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_01 = {
     },
     {
       "type": "image",
-      "src": "pi5-hero",
-      "alt": "Pi 5",
-      "caption": "Raspberry Pi 5 w czarnej, nowoczesnej obudowie."
+      "src": "max-amazed-desktop",
+      "alt": "Max patrzy z zachwytem — na monitorze pojawia się system.",
+      "caption": "Max patrzy z zachwytem — na monitorze pojawia się system."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_01 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Dalej",
-      "caption": "Na pulpicie świeci dziwny folder…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Raspberry Pi 5",
-      "image": "words/raspberry-pi5",
       "icon": "book",
       "what": "Mały nowoczesny komputer. Wersja 5 jest szybka i świetna do nauki.",
       "why": "Programowanie, elektronika, własne projekty.",
@@ -54,7 +53,6 @@ window.CHAPTER_01 = {
     },
     {
       "term": "Procesor",
-      "image": "words/processor",
       "icon": "book",
       "what": "Część, która liczy i wykonuje polecenia.",
       "why": "Bez niej nic się nie uruchomi.",
@@ -67,7 +65,6 @@ window.CHAPTER_01 = {
     },
     {
       "term": "System operacyjny",
-      "image": "words/os",
       "icon": "book",
       "what": "Główny program zarządzający komputerem.",
       "why": "Pulpit, pliki, aplikacje.",

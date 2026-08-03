@@ -1,24 +1,34 @@
-# Ilustracje książkowe (PNG / WebP)
+# Ilustracje książkowe (sceny)
 
-Nie używamy SVG jako ilustracji scen.
+**Nie używamy SVG jako ilustracji historii.**
 
-## Sceny rozdziałów
-Umieść pliki w `scenes/`:
+## Folder
+`assets/illustrations/scenes/`
 
-| Plik | Opis sceny |
-|------|------------|
-| max-opens-box.webp | Max otwiera tajemnicze pudełko w pokoju |
-| max-amazed-desktop.webp | Max z zachwytem patrzy na monitor (Linux) |
-| dad-helps-setup.webp | Tata pomaga podłączyć komputer przy biurku |
-| max-at-terminal.webp | Max przed terminalem, ciepłe światło lampki |
-| max-exploring-folders.webp | Max szuka w folderach przy komputerze |
-| max-led-light.webp | Max i tata z diodą LED przy biurku |
-| max-with-robot.webp | Max z małym robotem na dywanie |
-| max-camera-motion.webp | Max testuje kamerę w pokoju |
-| max-coding-python.webp | Max pisze kod, uśmiech przy monitorze |
-| max-minecraft-server.webp | Max i siostra grają, Pi jako serwer w tle |
-| max-big-project.webp | Max prezentuje projekt rodzinie |
-| max-diploma.webp | Max z dyplomem nad biurkiem |
-| cliffhanger-glow.webp | Max zaskoczony wieczorem przy ekranie |
+Każdy plik istnieje jako `.png` + `.webp`.
 
-Format: **WebP lub PNG**, ~1600×1000 px, styl malowanej książki dla dzieci.
+| Plik | Scena |
+|------|--------|
+| `max-opens-box` | Max otwiera tajemnicze pudełko |
+| `max-amazed-desktop` | Max z zachwytem patrzy na monitor |
+| `dad-helps-setup` | Tata pomaga podłączyć komputer |
+| `max-at-terminal` | Max przy terminalu |
+| `max-exploring-folders` | Max szuka w folderach |
+| `max-led-light` | Max i tata z diodą LED |
+| `max-with-robot` | Max z robotem |
+| `max-camera-motion` | Max testuje kamerę |
+| `max-coding-python` | Max programuje w Pythonie |
+| `max-minecraft-server` | Wspólna gra / serwer |
+| `max-big-project` | Prezentacja projektu rodzinie |
+| `max-diploma` | Dyplom |
+| `cliffhanger-glow` | Cliffhanger wieczorem |
+
+## Wymagania stylu
+- pełna scena z bohaterami
+- ciepłe światło, perspektywa pokoju
+- emocje i historia
+- jak profesjonalna książka dla dzieci (Usborne / DK Kids)
+- **nie** infografika, **nie** płaski SVG
+
+## Słowa (później)
+`assets/illustrations/words/*.webp` — opcjonalne; na razie karty słów działają bez grafiki.

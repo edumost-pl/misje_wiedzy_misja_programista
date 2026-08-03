@@ -78,7 +78,20 @@
   }
 
   function illPath(name) {
-    return "assets/illustrations/" + name + ".svg";
+    // Book scenes: PNG/WebP in assets/illustrations/scenes/
+    // Prefer WebP, fallback handled by <picture> in renderStory when ext omitted
+    if (name.indexOf(".") !== -1) {
+      if (name.indexOf("/") === -1) return "assets/illustrations/scenes/" + name;
+      return "assets/illustrations/" + name;
+    }
+    return "assets/illustrations/scenes/" + name + ".webp";
+  }
+
+  function illPngFallback(name) {
+    if (name.indexOf(".") !== -1) {
+      return illPath(name).replace(/\.webp$/i, ".png");
+    }
+    return "assets/illustrations/scenes/" + name + ".png";
   }
 
   function qs(name) {
@@ -340,12 +353,20 @@
     return story
       .map(function (chunk) {
         if (chunk.type === "image") {
+          var webp = illPath(chunk.src);
+          var png = illPngFallback(chunk.src);
           return (
-            '<figure class="story-image"><img src="' +
-            illPath(chunk.src) +
+            '<figure class="story-image">' +
+            "<picture>" +
+            '<source srcset="' +
+            webp +
+            '" type="image/webp">' +
+            '<img src="' +
+            png +
             '" alt="' +
             escapeHtml(chunk.alt || "") +
-            '">' +
+            '" loading="lazy">' +
+            "</picture>" +
             (chunk.caption
               ? "<figcaption>" + escapeHtml(chunk.caption) + "</figcaption>"
               : "") +
@@ -363,15 +384,22 @@
       words
         .map(function (w) {
           var art = w.image
-            ? illPath(w.image)
-            : iconPath(w.icon || "book");
+            ? w.image.indexOf("words/") === 0
+              ? "assets/illustrations/" + w.image.replace(/\.(svg|png|webp)$/i, "") + ".webp"
+              : illPath(w.image)
+            : "";
+          var artBlock = art
+            ? '<picture class="word-card__art"><source srcset="' +
+              art +
+              '" type="image/webp"><img src="' +
+              art.replace(/\.webp$/i, ".png") +
+              '" alt="' +
+              escapeHtml(w.term) +
+              '" loading="lazy" onerror="this.closest(\'picture\').style.display=\'none\'"></picture>'
+            : '<div class="word-card__art word-card__art--empty" aria-hidden="true"></div>';
           return (
             '<article class="word-card">' +
-            '<img class="word-card__art" src="' +
-            art +
-            '" alt="' +
-            escapeHtml(w.term) +
-            '">' +
+            artBlock +
             '<div class="word-card__body">' +
             '<h3 class="word-card__term">' +
             escapeHtml(w.term) +

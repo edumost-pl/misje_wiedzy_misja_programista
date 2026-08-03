@@ -13,9 +13,9 @@ window.CHAPTER_06 = {
     },
     {
       "type": "image",
-      "src": "camera-watch",
-      "alt": "Kamera",
-      "caption": "Kamera na Pi 5 zauważa ruch."
+      "src": "max-camera-motion",
+      "alt": "Kamera zauważa ruch — Max testuje pomysł.",
+      "caption": "Kamera zauważa ruch — Max testuje pomysł."
     },
     {
       "type": "text",
@@ -23,9 +23,9 @@ window.CHAPTER_06 = {
     },
     {
       "type": "image",
-      "src": "python-magic",
-      "alt": "Logika",
-      "caption": "Za detekcją stoi program."
+      "src": "max-coding-python",
+      "alt": "Pierwszy program w Pythonie ożywa na ekranie.",
+      "caption": "Pierwszy program w Pythonie ożywa na ekranie."
     },
     {
       "type": "text",
@@ -33,15 +33,14 @@ window.CHAPTER_06 = {
     },
     {
       "type": "image",
-      "src": "cliff-glow",
-      "alt": "Python",
-      "caption": "Kartka z napisem print…"
+      "src": "cliffhanger-glow",
+      "alt": "Coś dziwnego pojawia się na ekranie…",
+      "caption": "Coś dziwnego pojawia się na ekranie…"
     }
   ],
   "words": [
     {
       "term": "Kamera",
-      "image": "words/camera",
       "icon": "book",
       "what": "Rejestruje obraz.",
       "why": "Dane wizualne.",
@@ -54,7 +53,6 @@ window.CHAPTER_06 = {
     },
     {
       "term": "Klatka",
-      "image": "words/frame",
       "icon": "book",
       "what": "Jeden obraz wideo.",
       "why": "Porównanie = ruch.",
@@ -67,7 +65,6 @@ window.CHAPTER_06 = {
     },
     {
       "term": "Detekcja ruchu",
-      "image": "words/motion",
       "icon": "book",
       "what": "Zauważanie zmian.",
       "why": "Alarmy.",
