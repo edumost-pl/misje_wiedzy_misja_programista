@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rozdział · MISJE WIEDZY</title>
+    <meta name="description" content="Rozdział interaktywnej książki MISJE WIEDZY." />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="assets/icons/book.svg" type="image/svg+xml" />
+  </head>
+  <body data-page="chapter">
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <a class="brand" href="index.html">
+          <span class="brand__mark">
+            <img src="assets/icons/library.svg" alt="" />
+          </span>
+          <span class="brand__text">
+            <strong>MISJE WIEDZY</strong>
+            <span data-chapter-book-label>Książka</span>
+          </span>
+        </a>
+        <div class="progress-chip" title="Postęp w tej książce">
+          <div class="progress-chip__ring" data-progress-ring></div>
+          <div class="progress-chip__label" data-progress-label>— / —</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="lesson-shell">
+      <div class="container" id="chapter-root">
+        <div class="panel">
+          <h2>Ładowanie rozdziału…</h2>
+        </div>
+      </div>
+    </main>
+
+    <script src="data/library.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

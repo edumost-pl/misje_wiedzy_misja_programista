@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MISJE WIEDZY · Półka z książkami</title>
+    <meta
+      name="description"
+      content="Biblioteka interaktywnych książek edukacyjnych MISJE WIEDZY. Czytam • Odkrywam • Myślę."
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="assets/icons/library.svg" type="image/svg+xml" />
+  </head>
+  <body data-page="library">
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <a class="brand" href="index.html">
+          <span class="brand__mark">
+            <img src="assets/icons/library.svg" alt="" />
+          </span>
+          <span class="brand__text">
+            <strong>MISJE WIEDZY</strong>
+            <span>Czytam • Odkrywam • Myślę</span>
+          </span>
+        </a>
+      </div>
+    </header>
+
+    <main class="library-page">
+      <div class="container">
+        <header class="library-hero">
+          <p class="library-hero__eyebrow">📚 Biblioteka edukacyjna</p>
+          <h1>Półka z książkami</h1>
+          <p class="library-hero__lead">
+            Nowoczesna biblioteka ilustrowanych książek. Nie kurs. Nie strona
+            szkolna. Historie, które uczą czytać ze zrozumieniem.
+          </p>
+        </header>
+
+        <div class="shelf" id="book-shelf" aria-label="Lista książek"></div>
+      </div>
+    </main>
+
+    <p class="footer-note">MISJE WIEDZY · Czytam • Odkrywam • Myślę</p>
+
+    <script src="data/library.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+/* Książka 1 — Misja Programista (meta + spis rozdziałów) */
+window.BOOK_PROGRAMISTA = {
+  id: "programista",
+  number: 1,
+  title: "Misja Programista",
+  subtitle: "Raspberry Pi 5",
+  theme: "Czytanie ze zrozumieniem · technologia jako temat historii",
+  icon: "pi",
+  color: "#1D6FD8",
+  colorSoft: "#E8F1FC",
+  accent: "#0B3A7A",
+  rating: 4,
+  chaptersCount: 10,
+  readingMinutes: 90,
+  level: "3–4 klasa",
+  hero: {
+    name: "Max",
+    age: 10,
+    bio: "Max lubi roboty, gry i pytania „a co jeśli…?”. W tej książce odkrywa Raspberry Pi 5 — a Ty ćwiczysz czytanie, słownictwo i myślenie.",
+    icon: "max",
+  },
+  description:
+    "To nie kurs programowania. To przygodowa książka do czytania ze zrozumieniem. Max odkrywa Raspberry Pi 5 (czarna obudowa), a Ty rozwijasz słownictwo, rozumienie tekstu i wyobraźnię. Technologia jest tematem historii — nie celem samym w sobie.",
+  chapters: [
+    { id: 1, title: "Poznaj Raspberry Pi", icon: "pi" },
+    { id: 2, title: "Pierwsza komenda", icon: "terminal" },
+    { id: 3, title: "Tajemniczy folder", icon: "folder" },
+    { id: 4, title: "Dioda LED", icon: "led" },
+    { id: 5, title: "Budujemy robota", icon: "robot" },
+    { id: 6, title: "Kamera wykrywa ruch", icon: "camera" },
+    { id: 7, title: "Pierwszy program w Pythonie", icon: "python" },
+    { id: 8, title: "Serwer Minecraft", icon: "minecraft" },
+    { id: 9, title: "Wielki projekt", icon: "rocket" },
+    { id: 10, title: "Dyplom Młodego Programisty", icon: "diploma" },
+  ],
+};
