@@ -50,6 +50,7 @@ Caption: Tata pomaga podłączyć komputer przy biurku.
 
 Plik: `assets/illustrations/scenes/dad-helps-setup.webp`
 
+
 ```
 Warm cinematic children's book illustration. Ten-year-old Polish boy Max with messy brown hair, expressive brown eyes, bright blue hoodie (no readable text on clothes). Soft painterly style. High-end children's book illustration. Disney/Pixar quality. Warm colors. Detailed cozy bedroom workshop environment. Vertical composition. No text. No watermark. 16:10. Max and kind Polish dad about 40, short brown hair, calm smile, casual sweater at wooden desk connecting cables to Raspberry Pi 5 in black case; monitor showing Linux desktop; blue desk lamp; notebook and beginner's guide nearby; proud mentoring moment; warm sunset through window.
 ```

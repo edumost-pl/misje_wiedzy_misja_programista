@@ -5,7 +5,7 @@
 ## Folder
 `assets/illustrations/scenes/`
 
-Każdy plik istnieje jako `.png` + `.webp`.
+Każdy plik istnieje jako `.webp` (tylko ten format).
 
 **Zasada:** każda ilustracja w książce jest unikalna (40 scen / 10 rozdziałów × 4).
 Cliffhanger kończący rozdział może być wieczorny; pozostałe sceny — światło dzienne / ciepłe.

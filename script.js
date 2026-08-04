@@ -110,20 +110,12 @@
   }
 
   function illPath(name) {
-    // Book scenes: PNG/WebP in assets/illustrations/scenes/
-    // Prefer WebP, fallback handled by <picture> in renderStory when ext omitted
+    // Book scenes: WebP only in assets/illustrations/scenes/
     if (name.indexOf(".") !== -1) {
       if (name.indexOf("/") === -1) return "assets/illustrations/scenes/" + name;
       return "assets/illustrations/" + name;
     }
     return "assets/illustrations/scenes/" + name + ".webp";
-  }
-
-  function illPngFallback(name) {
-    if (name.indexOf(".") !== -1) {
-      return illPath(name).replace(/\.webp$/i, ".png");
-    }
-    return "assets/illustrations/scenes/" + name + ".png";
   }
 
   function qs(name) {
@@ -365,11 +357,22 @@
       toc +
       "</div>" +
       "</section>" +
+      '<div class="book-actions">' +
       '<a class="btn btn--primary btn--wide" href="chapter.html?book=' +
       book.id +
       "&id=" +
       firstOpen +
-      '">▶ Rozpocznij książkę</a>';
+      '">▶ Rozpocznij książkę</a>' +
+      '<button type="button" class="btn btn--ghost btn--wide" data-export-pdf="' +
+      book.id +
+      '">📄 Zapisz książkę jako PDF (A4)</button>' +
+      "</div>";
+    var pdfBtn = root.querySelector("[data-export-pdf]");
+    if (pdfBtn) {
+      pdfBtn.addEventListener("click", function () {
+        exportBookPdf(book.id);
+      });
+    }
   }
 
   /* ——— CHAPTER ——— */
@@ -386,7 +389,6 @@
       .map(function (chunk) {
         if (chunk.type === "image") {
           var webp = illPath(chunk.src);
-          var png = illPngFallback(chunk.src);
           var imgComment = "<!-- IMAGE: " + String(chunk.src || "") + " -->";
           if (chunk.prompt) {
             imgComment =
@@ -398,17 +400,12 @@
           }
           return (
             imgComment +
-            '<figure class="story-image">' +
-            "<picture>" +
-            '<source srcset="' +
-            webp +
-            '" type="image/webp">' +
+            '<figure class="story-image" role="button" tabindex="0" aria-label="Powiększ ilustrację">' +
             '<img src="' +
-            png +
+            webp +
             '" alt="' +
             escapeHtml(chunk.alt || "") +
             '" loading="lazy">' +
-            "</picture>" +
             (chunk.caption
               ? "<figcaption>" + escapeHtml(chunk.caption) + "</figcaption>"
               : "") +
@@ -449,13 +446,11 @@
               : illPath(w.image)
             : "";
           var artBlock = art
-            ? '<picture class="word-card__art"><source srcset="' +
+            ? '<img class="word-card__art" src="' +
               art +
-              '" type="image/webp"><img src="' +
-              art.replace(/\.webp$/i, ".png") +
               '" alt="' +
               escapeHtml(w.term) +
-              '" loading="lazy" onerror="this.closest(\'picture\').style.display=\'none\'"></picture>'
+              '" loading="lazy" onerror="this.style.display=\'none\'">'
             : '<div class="word-card__art word-card__art--empty" aria-hidden="true"></div>';
           return (
             '<article class="word-card">' +
@@ -747,7 +742,78 @@
     return ok;
   }
 
+  function ensureLightbox() {
+    var box = document.getElementById("story-lightbox");
+    if (box) return box;
+    box = document.createElement("div");
+    box.id = "story-lightbox";
+    box.className = "story-lightbox";
+    box.hidden = true;
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.setAttribute("aria-label", "Powiększona ilustracja");
+    box.innerHTML =
+      '<button type="button" class="story-lightbox__close" aria-label="Zamknij">×</button>' +
+      '<img class="story-lightbox__img" alt="">';
+    document.body.appendChild(box);
+
+    function closeLightbox() {
+      box.hidden = true;
+      box.classList.remove("is-open");
+      document.body.classList.remove("lightbox-open");
+      box.querySelector(".story-lightbox__img").removeAttribute("src");
+    }
+
+    box.addEventListener("click", function () {
+      closeLightbox();
+    });
+    box.querySelector(".story-lightbox__close").addEventListener("click", function (e) {
+      e.stopPropagation();
+      closeLightbox();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !box.hidden) closeLightbox();
+    });
+    return box;
+  }
+
+  function openLightbox(img) {
+    var box = ensureLightbox();
+    var full = box.querySelector(".story-lightbox__img");
+    full.src = img.currentSrc || img.src;
+    full.alt = img.alt || "";
+    box.hidden = false;
+    box.classList.add("is-open");
+    document.body.classList.add("lightbox-open");
+  }
+
+  function bindImageLightbox() {
+    document.querySelectorAll(".story-image").forEach(function (figure) {
+      function toggle() {
+        var img = figure.querySelector("img");
+        if (!img) return;
+        openLightbox(img);
+      }
+      figure.addEventListener("click", function (e) {
+        if (e.target.closest("figcaption")) return;
+        toggle();
+      });
+      figure.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+  }
+
   function bindChapter(chapter, bookId, total) {
+    bindImageLightbox();
+    document.querySelectorAll("[data-export-pdf]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        exportBookPdf(btn.getAttribute("data-export-pdf") || bookId);
+      });
+    });
     document.querySelectorAll("[data-ua-toggle]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var panel = btn.parentElement.querySelector("[data-ua-content]");
@@ -876,11 +942,15 @@
       '<a class="back-link" href="book.html?id=' +
       book.id +
       '">← Spis treści</a>' +
+      '<div class="lesson-nav__right">' +
+      '<button type="button" class="btn btn--ghost btn--pdf" data-export-pdf="' +
+      book.id +
+      '">📄 PDF</button>' +
       '<span style="font-family:var(--font-ui);font-weight:800;color:var(--ink-soft)">Rozdział ' +
       chapter.id +
       " / " +
       book.chaptersCount +
-      "</span></div>" +
+      "</span></div></div>" +
       '<header class="chapter-open">' +
       '<p class="chapter-open__label">Rozdział ' +
       chapter.id +
@@ -925,7 +995,286 @@
       nextLabel +
       '</a><a class="btn btn--ghost btn--wide" href="book.html?id=' +
       book.id +
-      '">Spis treści książki</a></div></section>';
+      '">Spis treści książki</a>' +
+      '<button type="button" class="btn btn--ghost btn--wide" data-export-pdf="' +
+      book.id +
+      '">📄 Zapisz książkę jako PDF (A4)</button></div></section>';
+  }
+
+  function absoluteAssetUrl(relPath) {
+    try {
+      return new URL(relPath, document.baseURI || window.location.href).href;
+    } catch (e) {
+      return relPath;
+    }
+  }
+
+  function pdfStoryHtml(story) {
+    return (story || [])
+      .map(function (chunk) {
+        if (chunk.type === "image") {
+          var src = absoluteAssetUrl(illPath(chunk.src));
+          return (
+            "<figure><img src=\"" +
+            src +
+            '" alt="' +
+            escapeHtml(chunk.alt || "") +
+            '">' +
+            (chunk.caption
+              ? "<figcaption>" + escapeHtml(chunk.caption) + "</figcaption>"
+              : "") +
+            "</figure>"
+          );
+        }
+        var raw = String(chunk.text || "");
+        var parts = raw
+          .split(/\n+/)
+          .map(function (s) {
+            return s.trim();
+          })
+          .filter(Boolean);
+        if (!parts.length && raw.trim()) parts = [raw.trim()];
+        return parts
+          .map(function (line) {
+            var isDialogue = /^[—\-–]/.test(line);
+            return (
+              '<p' +
+              (isDialogue ? ' class="is-dialogue"' : "") +
+              ">" +
+              formatStoryInline(line) +
+              "</p>"
+            );
+          })
+          .join("");
+      })
+      .join("");
+  }
+
+  function pdfWordsHtml(words) {
+    return (words || [])
+      .map(function (w) {
+        return (
+          '<div class="book-pdf__word"><h3>' +
+          escapeHtml(w.term) +
+          '</h3><p><span class="label">Co to jest?</span> ' +
+          escapeHtml(w.what) +
+          '</p><p><span class="label">Do czego służy?</span> ' +
+          escapeHtml(w.why) +
+          '</p><p><span class="label">Zapamiętaj</span> ' +
+          escapeHtml(w.remember) +
+          "</p></div>"
+        );
+      })
+      .join("");
+  }
+
+  function pdfQuestionsHtml(questions) {
+    return (
+      "<ol>" +
+      (questions || [])
+        .map(function (q) {
+          return (
+            "<li><span class=\"tag\">" +
+            escapeHtml(q.tag || "") +
+            "</span><br>" +
+            escapeHtml(q.prompt) +
+            "</li>"
+          );
+        })
+        .join("") +
+      "</ol>"
+    );
+  }
+
+  function buildBookPdfDocument(book, chapters) {
+    var color = book.color || "#1D6FD8";
+    var toc =
+      "<ol>" +
+      book.chapters
+        .map(function (ch) {
+          return (
+            "<li>Rozdział " +
+            ch.id +
+            " — " +
+            escapeHtml(ch.title) +
+            "</li>"
+          );
+        })
+        .join("") +
+      "</ol>";
+
+    var chaptersHtml = chapters
+      .map(function (ch, idx) {
+        return (
+          '<article class="book-pdf__chapter" style="' +
+          (idx === 0 ? "" : "") +
+          '">' +
+          '<p class="book-pdf__ch-label">Rozdział ' +
+          ch.id +
+          " z " +
+          book.chaptersCount +
+          "</p>" +
+          "<h1>" +
+          escapeHtml(ch.title) +
+          "</h1>" +
+          (ch.subtitle
+            ? '<p class="book-pdf__ch-sub">' + escapeHtml(ch.subtitle) + "</p>"
+            : "") +
+          (ch.intro
+            ? '<p class="book-pdf__intro">' + escapeHtml(ch.intro) + "</p>"
+            : "") +
+          '<div class="book-pdf__story">' +
+          pdfStoryHtml(ch.story) +
+          "</div>" +
+          '<section class="book-pdf__section">' +
+          "<h2>Nowe słowa</h2>" +
+          '<div class="book-pdf__words">' +
+          pdfWordsHtml(ch.words) +
+          "</div></section>" +
+          '<section class="book-pdf__section">' +
+          '<div class="book-pdf__fact"><h3>Ciekawostka</h3><p>' +
+          escapeHtml(ch.fact || "") +
+          "</p></div>" +
+          "<h2>Pytania do myślenia</h2>" +
+          '<div class="book-pdf__questions">' +
+          pdfQuestionsHtml(ch.questions) +
+          "</div></section>" +
+          '<section class="book-pdf__section book-pdf__summary">' +
+          "<h2>Czego się nauczyłeś?</h2><ul>" +
+          (ch.summary || [])
+            .map(function (s) {
+              return "<li>" + escapeHtml(s) + "</li>";
+            })
+            .join("") +
+          "</ul></section>" +
+          '<p class="book-pdf__footer">MISJE WIEDZY · ' +
+          escapeHtml(book.title) +
+          " · Rozdział " +
+          ch.id +
+          "</p>" +
+          "</article>"
+        );
+      })
+      .join("");
+
+    var base = absoluteAssetUrl("./");
+    return (
+      "<!DOCTYPE html><html lang=\"pl\"><head><meta charset=\"UTF-8\">" +
+      "<title>" +
+      escapeHtml(book.title) +
+      " · PDF</title>" +
+      '<base href="' +
+      base +
+      '">' +
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Nunito:wght@600;700;800&display=swap">' +
+      '<link rel="stylesheet" href="' +
+      absoluteAssetUrl("print-book.css") +
+      '">' +
+      "</head><body>" +
+      '<div class="pdf-toolbar">' +
+      '<button type="button" id="pdf-print">Zapisz / drukuj PDF</button>' +
+      '<button type="button" class="secondary" id="pdf-close">Zamknij</button>' +
+      "<span>A4 · tekst 12 pt · każdy rozdział od nowej strony</span>" +
+      "</div>" +
+      '<div class="book-pdf">' +
+      '<header class="book-pdf__cover" style="color:' +
+      color +
+      '">' +
+      '<p class="book-pdf__series">MISJE WIEDZY</p>' +
+      '<div class="book-pdf__badge">Książka ' +
+      book.number +
+      "</div>" +
+      "<h1>" +
+      escapeHtml(book.title) +
+      "</h1>" +
+      '<p class="book-pdf__sub">' +
+      escapeHtml(book.subtitle || "") +
+      "</p>" +
+      '<p class="book-pdf__meta">' +
+      escapeHtml(book.level || "") +
+      " · " +
+      book.chaptersCount +
+      " rozdziałów · ~" +
+      book.readingMinutes +
+      " min</p>" +
+      '<p class="book-pdf__desc">' +
+      escapeHtml(book.description || "") +
+      "</p>" +
+      "</header>" +
+      '<section class="book-pdf__toc"><h2>Spis treści</h2>' +
+      toc +
+      "</section>" +
+      chaptersHtml +
+      "</div>" +
+      "<script>" +
+      "document.getElementById('pdf-print').onclick=function(){window.print()};" +
+      "document.getElementById('pdf-close').onclick=function(){window.close()};" +
+      "window.addEventListener('load',function(){" +
+      "var imgs=[].slice.call(document.images);" +
+      "Promise.all(imgs.map(function(img){return img.complete?Promise.resolve():new Promise(function(r){img.onload=img.onerror=r})}))" +
+      ".then(function(){setTimeout(function(){window.print()},400)});" +
+      "});" +
+      "<\/script>" +
+      "</body></html>"
+    );
+  }
+
+  function exportBookPdf(bookId) {
+    var btn = document.querySelector('[data-export-pdf="' + bookId + '"]');
+    var prevLabel = btn ? btn.textContent : "";
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Przygotowuję PDF…";
+    }
+
+    loadScript("data/" + bookId + "/book.js")
+      .then(function () {
+        var book =
+          window["BOOK_" + bookId.toUpperCase()] || window.BOOK_PROGRAMISTA;
+        if (!book) throw new Error("Brak danych książki");
+        var loads = [];
+        for (var i = 1; i <= book.chaptersCount; i++) {
+          loads.push(
+            loadScript(
+              "data/" +
+                bookId +
+                "/chapter" +
+                String(i).padStart(2, "0") +
+                ".js"
+            )
+          );
+        }
+        return Promise.all(loads).then(function () {
+          return book;
+        });
+      })
+      .then(function (book) {
+        var chapters = [];
+        for (var i = 1; i <= book.chaptersCount; i++) {
+          var ch = window["CHAPTER_" + String(i).padStart(2, "0")];
+          if (!ch) throw new Error("Brak rozdziału " + i);
+          chapters.push(ch);
+        }
+        var html = buildBookPdfDocument(book, chapters);
+        var win = window.open("", "_blank");
+        if (!win) {
+          throw new Error(
+            "Przeglądarka zablokowała okno. Pozwól na wyskakujące okna i spróbuj ponownie."
+          );
+        }
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+      })
+      .catch(function (err) {
+        alert(err.message || "Nie udało się przygotować PDF.");
+      })
+      .then(function () {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = prevLabel;
+        }
+      });
   }
 
   document.addEventListener("DOMContentLoaded", function () {

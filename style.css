@@ -586,6 +586,24 @@ select {
   font-family: var(--font-ui);
 }
 
+.lesson-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn--pdf {
+  padding: 0.45em 0.9em;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.book-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
 .chapter-open {
   text-align: center;
   margin-bottom: 2.5rem;
@@ -630,12 +648,18 @@ select {
 
 .story-image {
   margin: 1.1rem auto;
-  width: min(100%, 80%);
+  width: min(100%, 85%);
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 22px 48px rgba(26, 35, 50, 0.12);
   background: #f7f1e8;
   animation: rise 0.5s var(--ease) both;
+  cursor: zoom-in;
+}
+
+.story-image:focus-visible {
+  outline: 3px solid var(--book-color, #1d6fd8);
+  outline-offset: 3px;
 }
 
 .story-image picture,
@@ -653,6 +677,67 @@ select {
   padding: 0.85rem 1rem 1rem;
   text-align: center;
   background: rgba(255, 255, 255, 0.94);
+  cursor: default;
+}
+
+body.lightbox-open {
+  overflow: hidden;
+}
+
+.story-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(12, 16, 24, 0.88);
+  cursor: zoom-out;
+  animation: lightbox-in 0.2s ease;
+}
+
+.story-lightbox[hidden] {
+  display: none !important;
+}
+
+.story-lightbox__img {
+  max-width: min(96vw, 1200px);
+  max-height: 92vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+}
+
+.story-lightbox__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1a2332;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.story-lightbox__close:hover {
+  background: #fff;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .story-chunk p {

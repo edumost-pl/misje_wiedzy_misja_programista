@@ -1,0 +1,345 @@
+/* PDF / print — A4 book layout for MISJE WIEDZY */
+@page {
+  size: A4 portrait;
+  margin: 18mm 16mm 20mm 16mm;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #1a2332;
+  font-family: "Literata", Georgia, "Times New Roman", serif;
+  font-size: 12pt;
+  line-height: 1.35;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.book-pdf {
+  max-width: 100%;
+}
+
+.book-pdf__cover {
+  page-break-after: always;
+  break-after: page;
+  min-height: 240mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 24mm 10mm;
+  border: 2pt solid #1a2332;
+}
+
+.book-pdf__series {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 11pt;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4a5568;
+  margin: 0 0 18mm;
+}
+
+.book-pdf__badge {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 10pt;
+  font-weight: 800;
+  border: 1.5pt solid currentColor;
+  border-radius: 999px;
+  padding: 0.35em 1em;
+  margin-bottom: 10mm;
+}
+
+.book-pdf__cover h1 {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 28pt;
+  line-height: 1.15;
+  margin: 0 0 4mm;
+  max-width: 140mm;
+}
+
+.book-pdf__sub {
+  font-size: 14pt;
+  color: #4a5568;
+  margin: 0 0 10mm;
+}
+
+.book-pdf__meta {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 10pt;
+  color: #4a5568;
+  margin: 0;
+}
+
+.book-pdf__desc {
+  margin-top: 12mm;
+  max-width: 130mm;
+  font-size: 11pt;
+  color: #4a5568;
+}
+
+.book-pdf__toc {
+  page-break-after: always;
+  break-after: page;
+}
+
+.book-pdf__toc h2,
+.book-pdf__chapter h2.section,
+.book-pdf h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 16pt;
+  margin: 0 0 6mm;
+}
+
+.book-pdf__toc ol {
+  margin: 0;
+  padding-left: 6mm;
+}
+
+.book-pdf__toc li {
+  margin: 0 0 3mm;
+  font-size: 12pt;
+}
+
+.book-pdf__chapter {
+  page-break-before: always;
+  break-before: page;
+}
+
+.book-pdf__chapter:first-of-type {
+  page-break-before: auto;
+  break-before: auto;
+}
+
+.book-pdf__ch-label {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 10pt;
+  font-weight: 800;
+  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 2mm;
+}
+
+.book-pdf__chapter > h1 {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 20pt;
+  line-height: 1.2;
+  margin: 0 0 2mm;
+}
+
+.book-pdf__ch-sub {
+  font-size: 11pt;
+  color: #4a5568;
+  font-style: italic;
+  margin: 0 0 4mm;
+}
+
+.book-pdf__intro {
+  font-size: 11pt;
+  color: #4a5568;
+  margin: 0 0 6mm;
+  padding-bottom: 4mm;
+  border-bottom: 0.5pt solid #d0d5dd;
+}
+
+.book-pdf__story p {
+  margin: 0 0 3.2mm;
+  font-size: 12pt;
+  orphans: 3;
+  widows: 3;
+}
+
+.book-pdf__story p.is-dialogue {
+  margin-left: 4mm;
+  font-weight: 600;
+}
+
+.book-pdf__story strong {
+  font-weight: 700;
+}
+
+.book-pdf figure {
+  margin: 5mm auto;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  max-width: 140mm;
+}
+
+.book-pdf figure img {
+  max-width: 100%;
+  max-height: 95mm;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 2mm;
+}
+
+.book-pdf figcaption {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 9pt;
+  color: #4a5568;
+  margin-top: 2mm;
+}
+
+.book-pdf__section {
+  page-break-before: always;
+  break-before: page;
+  margin-top: 0;
+}
+
+.book-pdf__words {
+  display: block;
+}
+
+.book-pdf__word {
+  margin: 0 0 4mm;
+  padding-bottom: 3mm;
+  border-bottom: 0.4pt solid #e5e7eb;
+  page-break-inside: avoid;
+}
+
+.book-pdf__word h3 {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 12pt;
+  margin: 0 0 1.5mm;
+}
+
+.book-pdf__word p {
+  margin: 0 0 1mm;
+  font-size: 11pt;
+}
+
+.book-pdf__word .label {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 8.5pt;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #4a5568;
+}
+
+.book-pdf__fact {
+  margin: 5mm 0;
+  padding: 4mm;
+  border: 0.8pt solid #d0d5dd;
+  border-radius: 2mm;
+  page-break-inside: avoid;
+  font-size: 11pt;
+}
+
+.book-pdf__fact h3 {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 10pt;
+  margin: 0 0 2mm;
+}
+
+.book-pdf__fact p {
+  margin: 0;
+}
+
+.book-pdf__questions ol {
+  margin: 0;
+  padding-left: 6mm;
+}
+
+.book-pdf__questions li {
+  margin: 0 0 3.5mm;
+  font-size: 12pt;
+  page-break-inside: avoid;
+}
+
+.book-pdf__questions .tag {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 8.5pt;
+  font-weight: 800;
+  color: #4a5568;
+  text-transform: uppercase;
+}
+
+.book-pdf__summary ul {
+  margin: 0;
+  padding-left: 6mm;
+}
+
+.book-pdf__summary li {
+  margin: 0 0 2mm;
+  font-size: 12pt;
+}
+
+.book-pdf__footer {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 0.5pt solid #d0d5dd;
+  font-family: "Nunito", system-ui, sans-serif;
+  font-size: 9pt;
+  color: #4a5568;
+  text-align: center;
+}
+
+@media screen {
+  body {
+    background: #e8e4dc;
+    padding: 16px;
+  }
+  .book-pdf {
+    max-width: 210mm;
+    margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    padding: 18mm 16mm;
+  }
+  .pdf-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    max-width: 210mm;
+    margin: 0 auto 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding: 10px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    font-family: "Nunito", system-ui, sans-serif;
+  }
+  .pdf-toolbar button {
+    font: inherit;
+    font-weight: 800;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.7em 1.4em;
+    cursor: pointer;
+    background: #1d6fd8;
+    color: #fff;
+  }
+  .pdf-toolbar button.secondary {
+    background: #eef2f7;
+    color: #1a2332;
+  }
+}
+
+@media print {
+  .pdf-toolbar {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    padding: 0;
+  }
+  .book-pdf {
+    box-shadow: none;
+    padding: 0;
+    max-width: none;
+  }
+}
