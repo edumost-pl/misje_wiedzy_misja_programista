@@ -1,0 +1,36 @@
+/* Książka 3 — Misja Robot */
+window.BOOK_ROBOT = {
+  id: "robot",
+  number: 3,
+  title: "Misja Robot",
+  subtitle: "Roboty, AI i szkolny konkurs",
+  theme: "Czytanie ze zrozumieniem · robotyka i współpraca jako temat historii",
+  icon: "robot",
+  color: "#EA580C",
+  colorSoft: "#FFF7ED",
+  accent: "#9A3412",
+  rating: 4,
+  chaptersCount: 10,
+  readingMinutes: 100,
+  level: "3–4 klasa",
+  hero: {
+    name: "Max",
+    age: 10,
+    bio: "Max nie jest najlepszy we wszystkim — ale zbiera drużynę. W konkursie robotycznym liczy się współpraca.",
+    icon: "max",
+  },
+  description:
+    "Przygodowa książka o szkolnym konkursie robotycznym. Max zbiera obcą sobie drużynę i buduje Iskrę — nie tylko robota, lecz bohatera. Obok wyścigu z Alfą, Turbo i Geniuszem rośnie legenda Nagrody Iskry. Największe pytanie brzmi: czy Iskra i drużyna zdążą urosnąć razem?",
+  chapters: [
+    { id: 1, title: "Konkurs!", icon: "robot" },
+    { id: 2, title: "Budujemy Iskrę", icon: "lego" },
+    { id: 3, title: "Iskra rusza", icon: "gpio" },
+    { id: 4, title: "Iskra widzi", icon: "camera" },
+    { id: 5, title: "Iskra myśli", icon: "chip" },
+    { id: 6, title: "Pierwszy test", icon: "search" },
+    { id: 7, title: "Awaria", icon: "electronics" },
+    { id: 8, title: "Naprawiamy razem", icon: "stem" },
+    { id: 9, title: "Wielki finał", icon: "rocket" },
+    { id: 10, title: "Nagroda", icon: "diploma" },
+  ],
+};

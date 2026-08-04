@@ -5,46 +5,384 @@ window.CHAPTER_03 = {
   "subtitle": "Pliki mają adresy",
   "icon": "folder",
   "tone": "sky",
-  "intro": "Max wchodzi w labirynt folderów, by zrozumieć dziwną nazwę.",
+  "intro": "Urwany komunikat nie daje spokoju. Max wchodzi w foldery — i znajduje kolejny ślad Nieznanego.",
   "story": [
     {
       "type": "text",
-      "text": "Max wpisał cd i nazwę tajemniczego folderu. Trafił do środka jak do ciemnej szuflady pełnej etykiet. Wokół: Dokumenty, Pobrane, misje. Tata porównał je do szuflad biurka: każda ma adres zwany ścieżką. — Bez adresu komputer nie wie, czego szukasz. Max poczuł się jak listonosz w mieście plików."
+      "text": "Max obudził się szybciej niż zwykle."
+    },
+    {
+      "type": "text",
+      "text": "Nie dlatego, że się wyspał."
+    },
+    {
+      "type": "text",
+      "text": "Przez pół nocy myślał o komunikacie, który urwał się dokładnie wtedy, gdy robiło się najciekawiej."
+    },
+    {
+      "type": "text",
+      "text": "I o tym dziwnym: Autor: ???"
+    },
+    {
+      "type": "text",
+      "text": "Przesunął monitor bliżej. Poprawił rękaw bluzy. Oblizał usta."
+    },
+    {
+      "type": "text",
+      "text": "— Dobra — szepnął. — Pokaż szuflady."
+    },
+    {
+      "type": "text",
+      "text": "Siostra przeszła korytarzem."
+    },
+    {
+      "type": "text",
+      "text": "— Pan ekspert otwiera szuflady! Tylko skarpetek do Dokumentów nie wkładaj."
+    },
+    {
+      "type": "text",
+      "text": "Max prychnął."
+    },
+    {
+      "type": "text",
+      "text": "— Jedna skarpetka i tak jest zaginiona. To osobna misja."
+    },
+    {
+      "type": "text",
+      "text": "— Numer sprawy: skarpetka numer dwa — potwierdziła siostra i zniknęła."
+    },
+    {
+      "type": "text",
+      "text": "Palce Maksa zawisły nad klawiaturą. Wpisał **cd**, potem nazwę folderu. Zawahał się. Przeczytał komendę jeszcze raz."
+    },
+    {
+      "type": "text",
+      "text": "Poczuł lekkie ukłucie w brzuchu. Enter brzmiał jak otwieranie kolejnych drzwi."
+    },
+    {
+      "type": "text",
+      "text": "Wdech."
+    },
+    {
+      "type": "text",
+      "text": "Enter."
     },
     {
       "type": "image",
       "src": "max-exploring-folders",
-      "alt": "Max szuka plików jak detektyw w folderach.",
-      "caption": "Max szuka plików jak detektyw w folderach."
+      "alt": "Max odkrywa foldery jak szuflady z adresami.",
+      "caption": "Max odkrywa foldery jak szuflady z adresami."
     },
     {
       "type": "text",
-      "text": "Komenda ls pokazała robot.txt i notatkę „nie otwieraj bez mapy”. Notatka głosiła: „Ścieżka to mapa. Bałagan to zguba.” Max uśmiechnął się, bo bałagan w plecaku znał aż za dobrze. Utworzył mkdir projekty i poczuł dumę jak po zbudowaniu bazy. Ścieżka /home/max/misje wyglądała jak sekretny kod."
-    },
-    {
-      "type": "image",
-      "src": "max-at-terminal",
-      "alt": "Max rozmawia z komputerem przez terminal.",
-      "caption": "Max rozmawia z komputerem przez terminal."
+      "text": "Wokół były **foldery**: Dokumenty, Pobrane, misje."
     },
     {
       "type": "text",
-      "text": "Nagle w projekty pojawił się plik, którego nie tworzył: led.plan. Ktoś zostawił wskazówkę. Max kliknął… i ekran zapytał o pierwsze połączenie diody. Przygoda wychodziła poza sam tekst. Max wziął głęboki oddech i poczuł, że naprawdę jest w środku przygody. W pokoju zrobiło się cicho, jakby nawet kurz czekął na kolejny krok. W głowie Maksa zapaliła się lampka ciekawości mocniejsza niż strach przed błędem. Zapisał myśl w notesie nierównym pismem, bo ręka drżała z wrażenia. Pomyślał o kolegach ze szkoły: jutro będzie miał lepszą historię niż boisko. Czarna obudowa Pi 5 połyskiwała jak mały statek gotowy do startu. Nawet siostra spojrzała z szacunkiem i powiedziała tylko: „No, nieźle”. Max obiecał sobie, że nie odpuści, nawet jeśli coś pójdzie nie tak. Max wziął głęboki oddech i poczuł, że naprawdę jest w środku przygody. W pokoju zrobiło się cicho, jakby nawet kurz czekął na kolejny krok. W głowie Maksa zapaliła się lampka ciekawości mocniejsza niż strach przed błędem. Zapisał myśl w notesie nierównym pismem, bo ręka drżała z wrażenia. Pomyślał o kolegach ze szkoły: jutro będzie miał lepszą historię niż boisko. Czarna obudowa Pi 5 połyskiwała jak mały statek gotowy do startu. Nawet siostra spojrzała z szacunkiem i powiedziała tylko: „No, nieźle”. Max obiecał sobie, że nie odpuści, nawet jeśli coś pójdzie nie tak. Max wziął głęboki oddech i poczuł, że naprawdę jest w środku przygody. W pokoju zrobiło się cicho, jakby nawet kurz czekął na kolejny krok. W głowie Maksa zapaliła się lampka ciekawości mocniejsza niż strach przed błędem. Zapisał myśl w notesie nierównym pismem, bo ręka drżała z wrażenia. Pomyślał o kolegach ze szkoły: jutro będzie miał lepszą historię niż boisko. Czarna obudowa Pi 5 połyskiwała jak mały statek gotowy do startu. Nawet siostra spojrzała z szacunkiem i powiedziała tylko: „No, nieźle”. Max obiecał sobie, że nie odpuści, nawet jeśli coś pójdzie nie tak. Max wziął głęboki oddech i poczuł, że naprawdę jest w środku przygody. W pokoju zrobiło się cicho, jakby nawet kurz czekął na kolejny krok. W głowie Maksa zapaliła się lampka ciekawości mocniejsza niż strach przed błędem."
+      "text": "Max pochylił się tak blisko, że nos prawie dotknął ramki. Zatrzymał się na „misje”."
+    },
+    {
+      "type": "text",
+      "text": "Wyglądało jak zaproszenie. Jakby folder wołał:"
+    },
+    {
+      "type": "text",
+      "text": "— Otwórz mnie!"
+    },
+    {
+      "type": "text",
+      "text": "Tata stanął za nim z herbatą."
+    },
+    {
+      "type": "text",
+      "text": "— Foldery to szuflady. Każda ma adres."
+    },
+    {
+      "type": "text",
+      "text": "Max odwrócił się."
+    },
+    {
+      "type": "text",
+      "text": "— Adres?"
+    },
+    {
+      "type": "text",
+      "text": "— Nazywamy go **ścieżką**."
+    },
+    {
+      "type": "text",
+      "text": "— Bez ścieżki komputer nie wie, czego szukasz. Jak listonosz bez numeru domu."
+    },
+    {
+      "type": "text",
+      "text": "Max kiwnął głową. To rozumiał."
+    },
+    {
+      "type": "text",
+      "text": "Wpisał **ls**. Palce znowu zawisły na Enterze. Ukłucie. Enter."
+    },
+    {
+      "type": "text",
+      "text": "Na liście: robot.txt i notatka „nie otwieraj bez mapy”."
+    },
+    {
+      "type": "text",
+      "text": "— Serio? Nawet pliki mnie ostrzegają?"
+    },
+    {
+      "type": "text",
+      "text": "Otworzył notatkę ostrożnie."
+    },
+    {
+      "type": "text",
+      "text": "„**Ścieżka** to mapa. Bałagan to zguba.”"
+    },
+    {
+      "type": "text",
+      "text": "Max zaśmiał się cicho. Bałagan w plecaku znał aż za dobrze."
     },
     {
       "type": "image",
-      "src": "cliffhanger-glow",
-      "alt": "Coś dziwnego pojawia się na ekranie…",
-      "caption": "Coś dziwnego pojawia się na ekranie…"
+      "src": "max-creates-folder",
+      "alt": "Max tworzy folder projekty — nową bazę pomysłów.",
+      "caption": "Max tworzy folder projekty — nową bazę pomysłów."
+    },
+    {
+      "type": "text",
+      "text": "Uniósł palce nad klawiszami."
+    },
+    {
+      "type": "text",
+      "text": "— Zrobię własny folder. Będą w nim ważne rzeczy."
+    },
+    {
+      "type": "text",
+      "text": "— Tajne? — zapytała siostra z progu."
+    },
+    {
+      "type": "text",
+      "text": "— Trochę. Ale głównie ważne."
+    },
+    {
+      "type": "text",
+      "text": "Wpisał ***mkdir projekty***. Sprawdził literki. Enter."
+    },
+    {
+      "type": "text",
+      "text": "Nowa szuflada. Max uśmiechnął się szeroko."
+    },
+    {
+      "type": "text",
+      "text": "Ścieżkę **/home/max/misje** zapisał w notesie wielkimi literami."
+    },
+    {
+      "type": "text",
+      "text": "— Jedna zła litera i jestem nie tam — mruknął."
+    },
+    {
+      "type": "text",
+      "text": "— Albo w moim folderze — dodała siostra. — Tam nie wolno."
+    },
+    {
+      "type": "text",
+      "text": "— Spoko. Mam własny."
+    },
+    {
+      "type": "image",
+      "src": "sister-sticker-notes",
+      "alt": "Siostra daje Maksowi naklejkę na notes z mapą.",
+      "caption": "Siostra daje Maksowi naklejkę na notes z mapą."
+    },
+    {
+      "type": "text",
+      "text": "Siostra podała mu naklejkę."
+    },
+    {
+      "type": "text",
+      "text": "— Na notes. Żebyś nie zgubił mapy."
+    },
+    {
+      "type": "text",
+      "text": "Max przykleił naklejkę."
+    },
+    {
+      "type": "text",
+      "text": "Spojrzał na notes."
+    },
+    {
+      "type": "text",
+      "text": "Teraz naprawdę wyglądał jak dziennik odkrywcy."
+    },
+    {
+      "type": "text",
+      "text": "Zamknął notes."
+    },
+    {
+      "type": "text",
+      "text": "Uśmiechnął się."
+    },
+    {
+      "type": "text",
+      "text": "Pierwszy raz pomyślał, że porządek może być całkiem fajny. Zwłaszcza jeśli prowadzi do kolejnej misji."
+    },
+    {
+      "type": "text",
+      "text": "Tata kazał mu wrócić i wejść ponownie — bez pośpiechu. Max zrobił to dwa razy."
+    },
+    {
+      "type": "text",
+      "text": "— Jeśli wiesz, gdzie jesteś, łatwiej iść dalej — powiedział tata."
+    },
+    {
+      "type": "text",
+      "text": "Max dopisał w dzienniku:"
+    },
+    {
+      "type": "text",
+      "text": "***MISJA 3 — UKOŃCZONA***"
+    },
+    {
+      "type": "text",
+      "text": "Nowa umiejętność: ścieżki i foldery"
+    },
+    {
+      "type": "text",
+      "text": "📓 NOTATNIK MAKSA"
+    },
+    {
+      "type": "text",
+      "text": "„**Folder** = szuflada."
+    },
+    {
+      "type": "text",
+      "text": "**Ścieżka** = adres."
+    },
+    {
+      "type": "text",
+      "text": "**cd** = wejdź."
+    },
+    {
+      "type": "text",
+      "text": "**mkdir** = zrób nową szufladę."
+    },
+    {
+      "type": "text",
+      "text": "Autor: ??? nadal milczy. Ale zostawia ślady.”"
+    },
+    {
+      "type": "image",
+      "src": "cliff-03-led-plan",
+      "alt": "W folderze pojawia się plik led.plan…",
+      "caption": "W folderze pojawia się plik led.plan…"
+    },
+    {
+      "type": "text",
+      "text": "Nagle w folderze projekty pojawił się plik, którego Max nie tworzył."
+    },
+    {
+      "type": "text",
+      "text": "***led.plan***"
+    },
+    {
+      "type": "text",
+      "text": "Max zamrugał. Pochylił się. Przesunął monitor o centymetr."
+    },
+    {
+      "type": "text",
+      "text": "— Ja tego nie robiłem."
+    },
+    {
+      "type": "text",
+      "text": "Siostra zmrużyła oko."
+    },
+    {
+      "type": "text",
+      "text": "— Może ktoś lubi niespodzianki. Bez balonów."
+    },
+    {
+      "type": "text",
+      "text": "Max położył dłoń na myszce. Spojrzał na tatę."
+    },
+    {
+      "type": "text",
+      "text": "— Otwierać?"
+    },
+    {
+      "type": "text",
+      "text": "Tata uśmiechnął się."
+    },
+    {
+      "type": "text",
+      "text": "— A od kiedy odkrywcy boją się nowych drzwi?"
+    },
+    {
+      "type": "text",
+      "text": "Max przełknął ślinę."
+    },
+    {
+      "type": "text",
+      "text": "Klik."
+    },
+    {
+      "type": "text",
+      "text": "Ekran zapytał o pierwsze połączenie diody."
+    },
+    {
+      "type": "text",
+      "text": "Na dole pliku były jeszcze linie:"
+    },
+    {
+      "type": "text",
+      "text": "***MISJA 3***"
+    },
+    {
+      "type": "text",
+      "text": "Autor: Nieznany"
+    },
+    {
+      "type": "text",
+      "text": "Status: Nadal ukryty"
+    },
+    {
+      "type": "text",
+      "text": "A pod spodem:"
+    },
+    {
+      "type": "text",
+      "text": "„Jeżeli to czytasz, jesteś coraz bliżej.”"
+    },
+    {
+      "type": "text",
+      "text": "Max poczuł ukłucie w brzuchu — mocniejsze niż przy Enterze."
+    },
+    {
+      "type": "text",
+      "text": "— Bliżej… czego?"
+    },
+    {
+      "type": "text",
+      "text": "Nikt nie odpowiedział. Tylko kursor mrugnął."
+    },
+    {
+      "type": "text",
+      "text": "Max zamknął notes jak mapę przed wyjściem."
+    },
+    {
+      "type": "text",
+      "text": "Przygoda wychodziła poza ekran — na stół z przewodami."
+    },
+    {
+      "type": "text",
+      "text": "A w głowie kołatało pytanie bez adresu: kim jest Nieznany?"
     }
   ],
   "words": [
     {
       "term": "Folder",
       "icon": "book",
-      "what": "Pojemnik na pliki.",
-      "why": "Porządek.",
-      "remember": "Szuflada komputera.",
+      "what": "Pojemnik na pliki i inne foldery.",
+      "why": "Pomaga utrzymać porządek w komputerze.",
+      "remember": "Folder = szuflada w systemie.",
       "ua": {
         "what": "Папка.",
         "why": "Порядок.",
@@ -54,47 +392,103 @@ window.CHAPTER_03 = {
     {
       "term": "Ścieżka",
       "icon": "book",
-      "what": "Adres w systemie.",
-      "why": "Znajdowanie plików.",
-      "remember": "Mapa z /.",
+      "what": "Adres pliku lub folderu w systemie.",
+      "why": "Dzięki niej program wie, gdzie coś leży.",
+      "remember": "Ścieżka wygląda jak mapa z znakami /.",
       "ua": {
         "what": "Шлях.",
-        "why": "Адреса.",
-        "remember": "Мапа."
+        "why": "Адреса файлу.",
+        "remember": "Мапа з /."
       }
     },
     {
       "term": "cd / mkdir",
       "icon": "book",
-      "what": "cd zmienia; mkdir tworzy.",
-      "why": "Organizacja.",
-      "remember": "cd = zmiana.",
+      "what": "cd zmienia folder. mkdir tworzy nowy folder.",
+      "why": "To podstawa poruszania się i organizacji pracy.",
+      "remember": "cd = wejdź, mkdir = stwórz.",
       "ua": {
-        "what": "cd/mkdir.",
-        "why": "Навігація.",
-        "remember": "cd."
+        "what": "cd і mkdir.",
+        "why": "Навігація й нові папки.",
+        "remember": "cd змінює, mkdir створює."
       }
     }
   ],
-  "fact": "W Linuxie wielkość liter w nazwach ma znaczenie.",
+  "fact": "W systemie Linux wielkość liter w nazwach ma znaczenie: Robot.txt i robot.txt to dwa różne pliki — jak dwa różne domy pod podobnym adresem.",
   "questions": [
     {
-      "tag": "Dlaczego?",
-      "prompt": "Dlaczego ten moment był ważny dla Maksa?",
-      "sample": "Bo nauczył się nowego kroku i połączył go z poprzednimi przygodami."
+      "tag": "Z tekstu",
+      "prompt": "Dlaczego Max obudził się szybciej?",
+      "sample": "Bo myślał o urwanym komunikacie i o dopisku Autor: ???"
     },
     {
-      "tag": "Jak myślisz?",
-      "prompt": "Co Max poczuł, gdy coś poszło nie tak?",
-      "sample": "Najpierw niepewność, a potem satysfakcję, gdy poprawił i zrozumiał."
+      "tag": "Z tekstu",
+      "prompt": "Do czego tata porównał foldery i ścieżkę?",
+      "sample": "Foldery do szuflad, ścieżkę do adresu — jak numer domu dla listonosza."
     },
     {
-      "tag": "Co dalej?",
-      "prompt": "Jak końcówka zachęca do kolejnego rozdziału?",
-      "sample": "Zostawia znak lub pytanie, które chce się rozwiązać dalej."
+      "tag": "Z tekstu",
+      "prompt": "Co zrobiła komenda mkdir projekty?",
+      "sample": "Utworzyła nowy folder projekty."
+    },
+    {
+      "tag": "Z tekstu",
+      "prompt": "Co Max zobaczył na dole pliku led.plan?",
+      "sample": "MISJA 3, Autor: Nieznany, Status: Nadal ukryty oraz „jesteś coraz bliżej”."
+    },
+    {
+      "tag": "O temacie",
+      "prompt": "Dlaczego ścieżka jest ważna?",
+      "sample": "Bo to dokładny adres pliku lub folderu."
+    },
+    {
+      "tag": "O temacie",
+      "prompt": "Co by było bez folderów?",
+      "sample": "Bałagan — trudniej coś znaleźć."
+    },
+    {
+      "tag": "O temacie",
+      "prompt": "Dlaczego zła litera w nazwie szkodzi?",
+      "sample": "Komputer czyta nazwy dokładnie — możesz wejść nie tam."
     }
   ],
   "tasks": [
+    {
+      "type": "truefalse",
+      "title": "Co jest prawdą?",
+      "items": [
+        {
+          "text": "cd przenosi do innego folderu.",
+          "answer": true
+        },
+        {
+          "text": "Ścieżka to adres w systemie.",
+          "answer": true
+        },
+        {
+          "text": "mkdir projekty skasowało Pi 5.",
+          "answer": false
+        },
+        {
+          "text": "led.plan pojawił się bez udziału Maksa.",
+          "answer": true
+        },
+        {
+          "text": "Autor na dole: Nieznany.",
+          "answer": true
+        },
+        {
+          "text": "Status: Nadal ukryty.",
+          "answer": true
+        },
+        {
+          "text": "Tata kazał bać się nowych drzwi.",
+          "answer": false
+        }
+      ],
+      "success": "Brawo!",
+      "hint": "led.plan"
+    },
     {
       "type": "match",
       "title": "Połącz",
@@ -108,38 +502,76 @@ window.CHAPTER_03 = {
           "right": "adres"
         },
         {
+          "left": "cd",
+          "right": "wejdź"
+        },
+        {
           "left": "mkdir",
-          "right": "tworzy folder"
+          "right": "stwórz folder"
         }
       ],
       "options": [
         "szuflada",
         "adres",
-        "tworzy folder",
+        "wejdź",
+        "stwórz folder",
         "gra"
       ],
       "success": "OK",
       "hint": "słownik"
     },
     {
+      "type": "fill",
+      "title": "Uzupełnij",
+      "items": [
+        {
+          "prompt": "Wejście do folderu: …",
+          "answer": "cd",
+          "accept": [
+            "cd",
+            "CD"
+          ]
+        },
+        {
+          "prompt": "Nowy folder: …",
+          "answer": "mkdir",
+          "accept": [
+            "mkdir",
+            "MKDIR"
+          ]
+        },
+        {
+          "prompt": "Adres pliku to …",
+          "answer": "ścieżka",
+          "accept": [
+            "ścieżka",
+            "sciezka",
+            "Ścieżka"
+          ]
+        }
+      ],
+      "success": "Tak!",
+      "hint": "historia"
+    },
+    {
       "type": "order",
-      "title": "Ułóż przebieg",
+      "title": "Kolejność",
       "items": [
         {
           "id": "a",
-          "text": "Start"
+          "text": "cd do folderu"
         },
         {
           "id": "b",
-          "text": "Nauka"
+          "text": "mkdir projekty"
         },
         {
           "id": "c",
-          "text": "Problem"
+          "text": "led.plan"
         },
         {
           "id": "d",
-          "text": "Rozwiązanie / cliffhanger"
+          "text": "Autor: Nieznany"
         }
       ],
       "correctOrder": [
@@ -148,34 +580,145 @@ window.CHAPTER_03 = {
         "c",
         "d"
       ],
-      "success": "OK",
-      "hint": "Fabuła"
+      "success": "Świetnie!",
+      "hint": "misja"
     },
     {
-      "type": "truefalse",
-      "title": "P/F",
-      "items": [
+      "type": "find",
+      "typeLabel": "Której komendy użyjesz?",
+      "title": "Chcesz utworzyć folder gry.",
+      "options": [
         {
-          "text": "Max uczy się przez próbowanie.",
-          "answer": true
+          "id": "a",
+          "text": "pwd"
         },
         {
-          "text": "Błędy kończą misję na zawsze.",
-          "answer": false
+          "id": "b",
+          "text": "mkdir gry"
         },
         {
-          "text": "Pi 5 pomaga w projektach.",
-          "answer": true
+          "id": "c",
+          "text": "ls"
         }
       ],
+      "answer": "b",
+      "success": "Tak!",
+      "hint": "stwórz"
+    },
+    {
+      "type": "find",
+      "typeLabel": "Znajdź błąd",
+      "title": "Max chce wejść do misje, ale wpisuje cd Mise. Co jest nie tak?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Zła litera / nazwa — ścieżka musi być dokładna"
+        },
+        {
+          "id": "b",
+          "text": "Za mało herbaty"
+        },
+        {
+          "id": "c",
+          "text": "Zły kolor kursora"
+        }
+      ],
+      "answer": "a",
+      "success": "Tak!",
+      "hint": "litera"
+    },
+    {
+      "type": "find",
+      "typeLabel": "Co powiedział bohater?",
+      "title": "„A od kiedy odkrywcy boją się nowych drzwi?”",
+      "options": [
+        {
+          "id": "a",
+          "text": "Siostra"
+        },
+        {
+          "id": "b",
+          "text": "Tata"
+        },
+        {
+          "id": "c",
+          "text": "Nieznany w pliku"
+        }
+      ],
+      "answer": "b",
+      "success": "Tak!",
+      "hint": "przed klik"
+    },
+    {
+      "type": "find",
+      "typeLabel": "Mini zagadka",
+      "title": "Na dole pliku: „jesteś coraz bliżej”. Bliżej czego?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Na razie nie wiadomo — to część tajemnicy Nieznanego"
+        },
+        {
+          "id": "b",
+          "text": "Bliżej sklepu z kanapkami"
+        },
+        {
+          "id": "c",
+          "text": "Bliżej wyłączenia Pi"
+        }
+      ],
+      "answer": "a",
+      "success": "Dokładnie!",
+      "hint": "tajemnica"
+    },
+    {
+      "type": "imagematch",
+      "title": "Dopasuj",
+      "prompt": "Ikona folderu / plików:",
+      "choices": [
+        {
+          "id": "folder",
+          "icon": "folder",
+          "label": "Folder"
+        },
+        {
+          "id": "rocket",
+          "icon": "rocket",
+          "label": "Rakieta"
+        },
+        {
+          "id": "python",
+          "icon": "python",
+          "label": "Python"
+        }
+      ],
+      "answer": "folder",
+      "success": "Brawo!",
+      "hint": "szuflada"
+    },
+    {
+      "type": "open",
+      "typeLabel": "Kreatywne",
+      "title": "Kim jest Nieznany?",
+      "prompt": "Napisz 2–3 zdania: kim według Ciebie może być Autor: Nieznany? Nie musi być „poprawnie” — ma być ciekawe.",
+      "sample": "Np. ktoś z rodziny, kto zostawia misje… albo program uruchomiony dawno temu.",
       "success": "OK",
-      "hint": "tekst"
+      "hint": ""
+    },
+    {
+      "type": "open",
+      "typeLabel": "Praktyczne",
+      "title": "Mapa na kartce",
+      "prompt": "Narysuj trzy „szuflady”: Dokumenty, Gry, Misje. Strzałką pokaż ścieżkę do Misje.",
+      "sample": "Jak mapa domu — od głównego korytarza do pokoju Misje.",
+      "success": "OK",
+      "hint": ""
     }
   ],
   "summary": [
-    "Max rozwinął umiejętność z rozdziału.",
-    "Technologia była tematem historii o myśleniu.",
-    "Cliffhanger zaprasza dalej."
+    "Foldery porządkują pliki jak szuflady.",
+    "Ścieżka to adres w systemie.",
+    "cd przenosi, mkdir tworzy nowy folder."
   ],
   "next": 4
 };

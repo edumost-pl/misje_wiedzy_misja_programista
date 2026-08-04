@@ -73,6 +73,38 @@
       .replace(/"/g, "&quot;");
   }
 
+  /**
+   * Inline story formatting (safe: no raw HTML from content).
+   * **tekst**     → pogrubienie
+   * *tekst*       → kursywa
+   * ***tekst***   → pogrubiona kursywa
+   * „tekst”       → zapis/cytat (.is-note) — pogrubiona kursywa
+   */
+  function formatStoryInline(str) {
+    var s = String(str || "");
+    var out = "";
+    var re =
+      /\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|\*((?:[^*\n]|\*(?!\*))+?)\*|„([^”]+)”/g;
+    var last = 0;
+    var m;
+    while ((m = re.exec(s)) !== null) {
+      out += escapeHtml(s.slice(last, m.index));
+      if (m[1] != null) {
+        out += '<strong><em class="is-note">' + escapeHtml(m[1]) + "</em></strong>";
+      } else if (m[2] != null) {
+        out += "<strong>" + escapeHtml(m[2]) + "</strong>";
+      } else if (m[3] != null) {
+        out += "<em>" + escapeHtml(m[3]) + "</em>";
+      } else if (m[4] != null) {
+        out +=
+          '<span class="is-note">„' + escapeHtml(m[4]) + "”</span>";
+      }
+      last = re.lastIndex;
+    }
+    out += escapeHtml(s.slice(last));
+    return out;
+  }
+
   function iconPath(name) {
     return "assets/icons/" + name + ".svg";
   }
@@ -355,7 +387,17 @@
         if (chunk.type === "image") {
           var webp = illPath(chunk.src);
           var png = illPngFallback(chunk.src);
+          var imgComment = "<!-- IMAGE: " + String(chunk.src || "") + " -->";
+          if (chunk.prompt) {
+            imgComment =
+              "<!-- IMAGE: " +
+              String(chunk.src || "") +
+              "\n\nPROMPT:\n\n" +
+              String(chunk.prompt) +
+              "\n-->";
+          }
           return (
+            imgComment +
             '<figure class="story-image">' +
             "<picture>" +
             '<source srcset="' +
@@ -373,7 +415,25 @@
             "</figure>"
           );
         }
-        return '<div class="story-chunk"><p>' + escapeHtml(chunk.text) + "</p></div>";
+        // Split into short paragraphs; dialogues (lines starting with — or -) get own lines
+        var raw = String(chunk.text || "");
+        var parts = raw.split(/\n+/).map(function (s) {
+          return s.trim();
+        }).filter(Boolean);
+        if (parts.length === 0 && raw.trim()) parts = [raw.trim()];
+        var paras = parts
+          .map(function (line) {
+            var isDialogue = /^[—\-–]/.test(line);
+            return (
+              '<p' +
+              (isDialogue ? ' class="is-dialogue"' : "") +
+              ">" +
+              formatStoryInline(line) +
+              "</p>"
+            );
+          })
+          .join("");
+        return '<div class="story-chunk">' + paras + "</div>";
       })
       .join("");
   }
@@ -453,9 +513,11 @@
       fill: "Uzupełnij",
       order: "Ułóż kolejność",
       imagematch: "Dopasuj obrazek",
-      find: "Znajdź odpowiedź",
+      find: "Wybierz odpowiedź",
+      open: "Zadanie otwarte",
     };
     var body = "";
+    if (task.typeLabel) typeLabel[task.type] = task.typeLabel;
 
     if (task.type === "truefalse") {
       body =
@@ -575,6 +637,15 @@
           .join("") +
         "</div>";
     }
+    if (task.type === "open") {
+      body =
+        '<p style="margin:0 0 0.75rem;color:var(--ink-soft)">' +
+        escapeHtml(task.prompt || "") +
+        '</p><button type="button" class="answer-toggle" aria-expanded="false" data-answer-toggle>Pokaż przykład / wskazówkę</button>' +
+        '<div class="answer-sample" data-answer-sample hidden>' +
+        escapeHtml(task.sample || "") +
+        "</div>";
+    }
 
     return (
       '<section class="task" data-task-index="' +
@@ -587,7 +658,9 @@
       escapeHtml(task.title) +
       "</h3>" +
       body +
-      '<div class="task-actions"><button type="button" class="btn btn--primary" data-check-task>Sprawdź</button></div>' +
+      (task.type === "open"
+        ? ""
+        : '<div class="task-actions"><button type="button" class="btn btn--primary" data-check-task>Sprawdź</button></div>') +
       '<div class="feedback" data-feedback></div></section>'
     );
   }
@@ -659,6 +732,9 @@
     if (task.type === "find") {
       var radio = taskEl.querySelector('input[type="radio"]:checked');
       ok = !!(radio && radio.value === task.answer);
+    }
+    if (task.type === "open") {
+      ok = true;
     }
 
     if (ok) {

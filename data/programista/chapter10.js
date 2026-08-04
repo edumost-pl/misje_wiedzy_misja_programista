@@ -2,14 +2,82 @@ window.CHAPTER_10 = {
   "id": 10,
   "bookId": "programista",
   "title": "Dyplom Młodego Programisty",
-  "subtitle": "Finał i nowy start",
+  "subtitle": "Ostatnie drzwi i nowy start",
   "icon": "diploma",
   "tone": "sky",
-  "intro": "Max zbiera drogę od pudełka do projektu.",
+  "intro": "MISJA 10: dyplom. Max otwiera ostatnie drzwi — i wreszcie poznaje Nieznanego.",
   "story": [
     {
       "type": "text",
-      "text": "Na stole Pi 5, notes, szkic robota. Max jest twórcą. Tata: ważne nie unikać błędów, lecz pytać co poprawić."
+      "text": "Rano na biurku leżała ramka. Pusta. Czekała."
+    },
+    {
+      "type": "text",
+      "text": "Obok — kartka z wczoraj:"
+    },
+    {
+      "type": "text",
+      "text": "***MISJA 10***"
+    },
+    {
+      "type": "text",
+      "text": "„Gotowy do dyplomu?”"
+    },
+    {
+      "type": "text",
+      "text": "Max otworzył folder MISJE. Na karcie SD świecił nowy plik."
+    },
+    {
+      "type": "text",
+      "text": "***Przewodnik.txt***"
+    },
+    {
+      "type": "text",
+      "text": "Autor: Nieznany"
+    },
+    {
+      "type": "text",
+      "text": "Palce zawisły nad otwarciem."
+    },
+    {
+      "type": "text",
+      "text": "Wdech."
+    },
+    {
+      "type": "text",
+      "text": "Klik."
+    },
+    {
+      "type": "text",
+      "text": "Pierwsza linia brzmiała:"
+    },
+    {
+      "type": "text",
+      "text": "„Jeśli czytasz to, znaczy, że przeszedłeś drogę.”"
+    },
+    {
+      "type": "text",
+      "text": "Druga:"
+    },
+    {
+      "type": "text",
+      "text": "„Nieznany nie chciał Cię sprawdzać. Chciał Cię zaprosić.”"
+    },
+    {
+      "type": "text",
+      "text": "Trzecia, najkrótsza:"
+    },
+    {
+      "type": "text",
+      "text": "„A teraz odwróć się.”"
+    },
+    {
+      "type": "text",
+      "text": "Max odwrócił się."
+    },
+    {
+      "type": "text",
+      "text": "W drzwiach stał tata. Z herbatą. I z uśmiechem, który Max znał od zawsze — tylko dziś miał w sobie coś… kończącego zagadkę."
     },
     {
       "type": "image",
@@ -19,122 +87,437 @@ window.CHAPTER_10 = {
     },
     {
       "type": "text",
-      "text": "Powiesił dyplom. Cel: nauczyć kolegę pierwszej komendy. Programista, kompetencja, portfolio. Półka MISJE WIEDZY zaprasza dalej."
-    },
-    {
-      "type": "image",
-      "src": "max-big-project",
-      "alt": "Max pokazuje rodzinie swój wielki projekt.",
-      "caption": "Max pokazuje rodzinie swój wielki projekt."
+      "text": "— To Ty — powiedział Max. Nie jako oskarżenie. Jako odkrycie."
     },
     {
       "type": "text",
-      "text": "Ciche: print(\"Do zobaczenia\"). Uśmiech. Historie o technologii są historiami o odwadze czytania i próbowania jeszcze raz. Max wziął głęboki oddech i poczuł, że naprawdę jest w środku przygody. W pokoju zrobiło się cicho, jakby nawet kurz czekął na kolejny krok. W głowie Maksa zapaliła się lampka ciekawości mocniejsza niż strach przed błędem. Zapisał myśl w notesie nierównym pismem, bo ręka drżała z wrażenia. Pomyślał o kolegach ze szkoły: jutro będzie miał lepszą historię niż boisko. Czarna obudowa Pi 5 połyskiwała jak mały statek gotowy do startu. Nawet siostra spojrzała z szacunkiem i powiedziała tylko: „No, nieźle”. Max obiecał sobie, że nie odpuści, nawet jeśli coś pójdzie nie tak. Max wziął głęboki oddech i poczuł, że naprawdę jest w środku przygody. W pokoju zrobiło się cicho, jakby nawet kurz czekął na kolejny krok. W głowie Maksa zapaliła się lampka ciekawości mocniejsza niż strach przed błędem. Zapisał myśl w notesie nierównym pismem, bo ręka drżała z wrażenia. Pomyślał o kolegach ze szkoły: jutro będzie miał lepszą historię niż boisko. Czarna obudowa Pi 5 połyskiwała jak mały statek gotowy do startu. Nawet siostra spojrzała z szacunkiem i powiedziała tylko: „No, nieźle”. Max obiecał sobie, że nie odpuści, nawet jeśli coś pójdzie nie tak. Max wziął głęboki oddech i poczuł, że naprawdę jest w środku przygody. W pokoju zrobiło się cicho, jakby nawet kurz czekął na kolejny krok. W głowie Maksa zapaliła się lampka ciekawości mocniejsza niż strach przed błędem. Zapisał myśl w notesie nierównym pismem, bo ręka drżała z wrażenia. Pomyślał o kolegach ze szkoły: jutro będzie miał lepszą historię niż boisko. Czarna obudowa Pi 5 połyskiwała jak mały statek gotowy do startu. Nawet siostra spojrzała z szacunkiem i powiedziała tylko: „No, nieźle”. Max obiecał sobie, że nie odpuści, nawet jeśli coś pójdzie nie tak. Max wziął głęboki oddech i poczuł, że naprawdę jest w środku przygody. W pokoju zrobiło się cicho, jakby nawet kurz czekął na kolejny krok. W głowie Maksa zapaliła się lampka ciekawości mocniejsza niż strach przed błędem. Zapisał myśl w notesie nierównym pismem, bo ręka drżała z wrażenia. Pomyślał o kolegach ze szkoły: jutro będzie miał lepszą historię niż boisko. Czarna obudowa Pi 5 połyskiwała jak mały statek gotowy do startu."
+      "text": "Tata skinął."
+    },
+    {
+      "type": "text",
+      "text": "— Ja przygotowałem ścieżkę. Foldery. Kartki. Statusy."
+    },
+    {
+      "type": "text",
+      "text": "— Dlaczego „Nieznany”?"
+    },
+    {
+      "type": "text",
+      "text": "— Bo dobre zagadki lubią przygotowanych — odparł tata. — A odkrywca lepiej zapamiętuje, gdy sam otwiera drzwi."
+    },
+    {
+      "type": "text",
+      "text": "Max przełknął ślinę. Potem się uśmiechnął."
+    },
+    {
+      "type": "text",
+      "text": "— Wybrałeś mnie."
+    },
+    {
+      "type": "text",
+      "text": "— Bo lubisz pytania „a co jeśli?” — powiedział tata. — I bo nie uciekasz, gdy coś nie działa."
+    },
+    {
+      "type": "text",
+      "text": "Mama weszła z ramką już niepustą. W środku świecił **Dyplom Młodego Programisty**."
+    },
+    {
+      "type": "text",
+      "text": "— Żeby nie zginął między kablami."
+    },
+    {
+      "type": "text",
+      "text": "Siostra zajrzała z tabletem."
+    },
+    {
+      "type": "text",
+      "text": "— Oficjalnie: koniec książki?"
+    },
+    {
+      "type": "text",
+      "text": "— Koniec tej misji — odparł Max. — Nie koniec pytań."
     },
     {
       "type": "image",
-      "src": "cliffhanger-glow",
-      "alt": "Coś dziwnego pojawia się na ekranie…",
-      "caption": "Coś dziwnego pojawia się na ekranie…"
+      "src": "max-sets-learning-goal",
+      "alt": "Max wiesza dyplom i zapisuje cel: nauczyć kolegę.",
+      "caption": "Max wiesza dyplom i zapisuje cel: nauczyć kolegę."
+    },
+    {
+      "type": "text",
+      "text": "Max powiesił dyplom nad biurkiem. Obok napisał cel:"
+    },
+    {
+      "type": "text",
+      "text": "„Nauczyć kolegę pierwszej komendy.”"
+    },
+    {
+      "type": "text",
+      "text": "Potem otworzył notes i przeczytał całą drogę na głos — jak listę skarbów:"
+    },
+    {
+      "type": "text",
+      "text": "terminal, foldery, LED, robot, kamera, Python, serwer, projekt."
+    },
+    {
+      "type": "text",
+      "text": "— To moje **portfolio** — powiedział. — Małe rzeczy. Ale prawdziwe."
+    },
+    {
+      "type": "text",
+      "text": "Tata usiadł na skraju biurka."
+    },
+    {
+      "type": "text",
+      "text": "— Programista nie zgaduje. Sprawdza, poprawia i próbuje jeszcze raz."
+    },
+    {
+      "type": "text",
+      "text": "— I dzieli się — dodał Max. — Bo inaczej wiedza zostaje sama w notesie."
+    },
+    {
+      "type": "text",
+      "text": "Siostra uniosła brwi."
+    },
+    {
+      "type": "text",
+      "text": "— To może najpierw mnie. ***pwd***. Bez wykładu."
+    },
+    {
+      "type": "text",
+      "text": "— Bez wykładu — obiecał Max. — Z terminalem."
+    },
+    {
+      "type": "image",
+      "src": "bookshelf-next-missions",
+      "alt": "Półka MISJE WIEDZY czeka na kolejne historie.",
+      "caption": "Półka MISJE WIEDZY czeka na kolejne historie."
+    },
+    {
+      "type": "text",
+      "text": "Na półce MISJE WIEDZY stały kolejne grzbiety. Kosmos. Roboty. Inne drzwi."
+    },
+    {
+      "type": "text",
+      "text": "Max pogłaskał grzbiet swojej książki jak przyjaciela."
+    },
+    {
+      "type": "text",
+      "text": "— A skarpetka? — zapytała siostra nagle."
+    },
+    {
+      "type": "text",
+      "text": "— Zamknięta sprawa — odparł Max. — Tym razem."
+    },
+    {
+      "type": "text",
+      "text": "Mama zaśmiała się cicho."
+    },
+    {
+      "type": "text",
+      "text": "— Do następnej misji znajdzie się nowa."
+    },
+    {
+      "type": "text",
+      "text": "Max otworzył **Przewodnik.txt** jeszcze raz. Na końcu było zdanie, którego wcześniej nie zauważył:"
+    },
+    {
+      "type": "text",
+      "text": "„Teraz Ty możesz być Nieznanym. Dla kogoś, kto dopiero zaczyna.”"
+    },
+    {
+      "type": "text",
+      "text": "Poczuł ciepło w piersi. Nie jak strach. Jak zaproszenie."
+    },
+    {
+      "type": "text",
+      "text": "📓 NOTATNIK MAKSA"
+    },
+    {
+      "type": "text",
+      "text": "„**Dyplom** = znak drogi, nie koniec."
+    },
+    {
+      "type": "text",
+      "text": "**Kompetencja** = umiem zrobić i wytłumaczyć."
+    },
+    {
+      "type": "text",
+      "text": "**Portfolio** = zbiór moich projektów."
+    },
+    {
+      "type": "text",
+      "text": "Nieznany = Tata. Ścieżka była darem."
+    },
+    {
+      "type": "text",
+      "text": "Najważniejsze: dzielić się. Uczyć. Otwierać drzwi innym."
+    },
+    {
+      "type": "text",
+      "text": "Programista nie zgaduje — sprawdza, poprawia i próbuje jeszcze raz.”"
+    },
+    {
+      "type": "text",
+      "text": "***MISJA 10 — UKOŃCZONA***"
+    },
+    {
+      "type": "text",
+      "text": "Nowa umiejętność: dzielenie się wiedzą"
+    },
+    {
+      "type": "text",
+      "text": "***KSIĄŻKA 1 — UKOŃCZONA***"
+    },
+    {
+      "type": "image",
+      "src": "cliff-10-goodbye-print",
+      "alt": "print(\"Do zobaczenia\") — do kolejnej książki…",
+      "caption": "print(\"Do zobaczenia\") — do kolejnej książki…"
+    },
+    {
+      "type": "text",
+      "text": "Gdy wychodził z pokoju, Pi 5 mruknął cicho i na ekranie pojawiło się:"
+    },
+    {
+      "type": "text",
+      "text": "***print(\"Do zobaczenia\")***"
+    },
+    {
+      "type": "text",
+      "text": "Max odwrócił się w progu."
+    },
+    {
+      "type": "text",
+      "text": "— Do zobaczenia — odpowiedział. — I dziękuję."
+    },
+    {
+      "type": "text",
+      "text": "Tata uniósł kubek jak toast."
+    },
+    {
+      "type": "text",
+      "text": "— A od kiedy odkrywcy boją się nowych drzwi?"
+    },
+    {
+      "type": "text",
+      "text": "— Od nigdy — uśmiechnął się Max. — Zwłaszcza gdy ktoś zostawił ścieżkę."
+    },
+    {
+      "type": "text",
+      "text": "Za oknem dzień był jasny. Na półce czekały nowe historie."
+    },
+    {
+      "type": "text",
+      "text": "Max zamknął notes jak książkę po dobrym rozdziale."
+    },
+    {
+      "type": "text",
+      "text": "Pierwsza misja skończona."
+    },
+    {
+      "type": "text",
+      "text": "Następna — dopiero się zaczynała."
     }
   ],
   "words": [
     {
-      "term": "Programista",
+      "term": "Dyplom",
       "icon": "book",
-      "what": "Tworzy programy.",
-      "why": "Gry i roboty.",
-      "remember": "Logika+pomysł.",
+      "what": "Dokument uznający ukończenie drogi.",
+      "why": "Pokazuje, że przeszedłeś etapy.",
+      "remember": "Znak startu do dzielenia się — nie koniec nauki.",
       "ua": {
-        "what": "Програміст.",
-        "why": "Творить.",
-        "remember": "Логіка."
+        "what": "Диплом.",
+        "why": "Шлях.",
+        "remember": "Старт."
       }
     },
     {
       "term": "Kompetencja",
       "icon": "book",
-      "what": "Umiejętność w praktyce.",
-      "why": "Wiem i potrafię.",
-      "remember": "Dowód nauki.",
+      "what": "Umiejętność, którą potrafisz zrobić i wyjaśnić.",
+      "why": "Wiedza działa, gdy umiesz jej użyć.",
+      "remember": "Umiem + tłumaczę = kompetencja.",
       "ua": {
         "what": "Компетенція.",
-        "why": "Практика.",
-        "remember": "Вмію."
+        "why": "Вміння.",
+        "remember": "Пояснити."
       }
     },
     {
       "term": "Portfolio",
       "icon": "book",
-      "what": "Zbiór projektów.",
-      "why": "Pokaz drogi.",
-      "remember": "Zapisuj małe.",
+      "what": "Zbiór twoich projektów i prac.",
+      "why": "Pokazuje drogę, nie tylko oceny.",
+      "remember": "Nawet małe projekty się liczą.",
       "ua": {
         "what": "Портфоліо.",
-        "why": "Показати.",
+        "why": "Проєкти.",
         "remember": "Збірка."
       }
     }
   ],
-  "fact": "Wielu twórców zaczynało od małych projektów domowych.",
+  "fact": "Wiele osób uczących programowania zaczynało od „pokaż komuś jedną komendę”. Dzielenie się wiedzą utrwala to, czego sam się nauczyłeś — dokładnie jak Max z ***pwd***.",
   "questions": [
     {
-      "tag": "Dlaczego?",
-      "prompt": "Dlaczego ten moment był ważny dla Maksa?",
-      "sample": "Bo nauczył się nowego kroku i połączył go z poprzednimi przygodami."
+      "tag": "Z tekstu",
+      "prompt": "Kim okazał się Nieznany?",
+      "sample": "Tatą Maksa — to on przygotował ścieżkę, foldery i kartki."
     },
     {
-      "tag": "Jak myślisz?",
-      "prompt": "Co Max poczuł, gdy coś poszło nie tak?",
-      "sample": "Najpierw niepewność, a potem satysfakcję, gdy poprawił i zrozumiał."
+      "tag": "Z tekstu",
+      "prompt": "Co Max przeczytał w Przewodnik.txt?",
+      "sample": "Że Nieznany chciał zaprosić, nie tylko sprawdzać — i że Max może teraz być Nieznanym dla kogoś nowego."
     },
     {
-      "tag": "Co dalej?",
-      "prompt": "Jak końcówka zachęca do kolejnego rozdziału?",
-      "sample": "Zostawia znak lub pytanie, które chce się rozwiązać dalej."
+      "tag": "Z tekstu",
+      "prompt": "Jaki cel zapisał Max obok dyplomu?",
+      "sample": "Nauczyć kolegę pierwszej komendy."
+    },
+    {
+      "tag": "Z tekstu",
+      "prompt": "Co pojawiło się na ekranie na pożegnanie?",
+      "sample": "print(\"Do zobaczenia\")"
+    },
+    {
+      "tag": "O temacie",
+      "prompt": "Dlaczego dzielenie się wiedzą jest ważne?",
+      "sample": "Bo utrwala umiejętność i otwiera drzwi komuś, kto dopiero zaczyna."
+    },
+    {
+      "tag": "O temacie",
+      "prompt": "Czym jest portfolio?",
+      "sample": "Zbiorem twoich projektów — dowodem drogi, nie tylko jednej oceny."
+    },
+    {
+      "tag": "O temacie",
+      "prompt": "Dlaczego dyplom nie oznacza końca nauki?",
+      "sample": "Bo to znak ukończonej misji i start do kolejnych pytań i książek."
     }
   ],
   "tasks": [
     {
-      "type": "find",
-      "title": "Wybierz poprawne",
-      "options": [
+      "type": "truefalse",
+      "title": "Co jest prawdą?",
+      "items": [
         {
-          "id": "1",
-          "text": "Max nic nie zrobił."
+          "text": "Nieznany to tata Maksa.",
+          "answer": true
         },
         {
-          "id": "2",
-          "text": "Max nauczył się czegoś nowego i działał krok po kroku."
+          "text": "Dyplom znaczy, że nauka się kończy na zawsze.",
+          "answer": false
         },
         {
-          "id": "3",
-          "text": "Max wyrzucił Pi 5."
+          "text": "Max chce nauczyć kogoś pierwszej komendy.",
+          "answer": true
+        },
+        {
+          "text": "Portfolio to zbiór projektów.",
+          "answer": true
+        },
+        {
+          "text": "W Przewodniku Max przeczytał, że może być Nieznanym dla innych.",
+          "answer": true
+        },
+        {
+          "text": "Na pożegnanie Pi wypisał print(\"Do zobaczenia\").",
+          "answer": true
+        },
+        {
+          "text": "Siostra odmówiła nauki pwd.",
+          "answer": false
         }
       ],
-      "answer": "2",
+      "success": "Brawo!",
+      "hint": "finał"
+    },
+    {
+      "type": "match",
+      "title": "Połącz",
+      "pairs": [
+        {
+          "left": "dyplom",
+          "right": "znak drogi"
+        },
+        {
+          "left": "kompetencja",
+          "right": "umiem i tłumaczę"
+        },
+        {
+          "left": "portfolio",
+          "right": "zbiór projektów"
+        },
+        {
+          "left": "Nieznany",
+          "right": "tata"
+        }
+      ],
+      "options": [
+        "znak drogi",
+        "umiem i tłumaczę",
+        "zbiór projektów",
+        "tata",
+        "farba"
+      ],
+      "success": "OK",
+      "hint": "słownik"
+    },
+    {
+      "type": "fill",
+      "title": "Uzupełnij",
+      "items": [
+        {
+          "prompt": "Autor misji okazał się …",
+          "answer": "tatą",
+          "accept": [
+            "tatą",
+            "tata",
+            "Tatą",
+            "Tata"
+          ]
+        },
+        {
+          "prompt": "Zbiór projektów to …",
+          "answer": "portfolio",
+          "accept": [
+            "portfolio",
+            "Portfolio"
+          ]
+        },
+        {
+          "prompt": "Plik na karcie SD nazywał się …",
+          "answer": "Przewodnik",
+          "accept": [
+            "Przewodnik",
+            "przewodnik",
+            "Przewodnik.txt"
+          ]
+        }
+      ],
       "success": "Tak!",
-      "hint": "Historia."
+      "hint": "historia"
     },
     {
       "type": "order",
-      "title": "Ułóż przebieg",
+      "title": "Kolejność",
       "items": [
         {
           "id": "a",
-          "text": "Start"
+          "text": "Otwarcie Przewodnik.txt"
         },
         {
           "id": "b",
-          "text": "Nauka"
+          "text": "Odkrycie: Nieznany = Tata"
         },
         {
           "id": "c",
-          "text": "Problem"
+          "text": "Dyplom i cel: nauczyć kolegę"
         },
         {
           "id": "d",
-          "text": "Rozwiązanie / cliffhanger"
+          "text": "print(\"Do zobaczenia\")"
         }
       ],
       "correctOrder": [
@@ -143,34 +526,145 @@ window.CHAPTER_10 = {
         "c",
         "d"
       ],
-      "success": "OK",
-      "hint": "Fabuła"
+      "success": "Świetnie!",
+      "hint": "misja 10"
     },
     {
-      "type": "truefalse",
-      "title": "P/F",
-      "items": [
+      "type": "find",
+      "typeLabel": "Znajdź błąd",
+      "title": "Które zdanie jest FAŁSZYWE?",
+      "options": [
         {
-          "text": "Max uczy się przez próbowanie.",
-          "answer": true
+          "id": "a",
+          "text": "Dzielenie się wiedzą pomaga"
         },
         {
-          "text": "Błędy kończą misję na zawsze.",
-          "answer": false
+          "id": "b",
+          "text": "Max dostał dyplom"
         },
         {
-          "text": "Pi 5 pomaga w projektach.",
-          "answer": true
+          "id": "c",
+          "text": "Nieznany okazał się sąsiadem z klatki"
         }
       ],
+      "answer": "c",
+      "success": "Tak!",
+      "hint": "tata"
+    },
+    {
+      "type": "find",
+      "typeLabel": "Co wydarzy się dalej?",
+      "title": "„Teraz Ty możesz być Nieznanym” oznacza…",
+      "options": [
+        {
+          "id": "a",
+          "text": "Max może przygotować ścieżkę komuś nowemu"
+        },
+        {
+          "id": "b",
+          "text": "Max ma zniknąć z domu"
+        },
+        {
+          "id": "c",
+          "text": "Koniec wszystkich książek na zawsze"
+        }
+      ],
+      "answer": "a",
+      "success": "Dokładnie!",
+      "hint": "dzielić się"
+    },
+    {
+      "type": "find",
+      "typeLabel": "Co powiedział bohater?",
+      "title": "„Bo dobre zagadki lubią przygotowanych.”",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tata"
+        },
+        {
+          "id": "b",
+          "text": "Kot"
+        },
+        {
+          "id": "c",
+          "text": "Router"
+        }
+      ],
+      "answer": "a",
+      "success": "Tak!",
+      "hint": "catchphrase"
+    },
+    {
+      "type": "imagematch",
+      "title": "Dopasuj",
+      "prompt": "Ikona dyplomu:",
+      "choices": [
+        {
+          "id": "diploma",
+          "icon": "diploma",
+          "label": "Dyplom"
+        },
+        {
+          "id": "dino",
+          "icon": "dino",
+          "label": "Dino"
+        },
+        {
+          "id": "train",
+          "icon": "train",
+          "label": "Pociąg"
+        }
+      ],
+      "answer": "diploma",
+      "success": "Brawo!",
+      "hint": "finał"
+    },
+    {
+      "type": "open",
+      "typeLabel": "Kreatywne",
+      "title": "Twój Przewodnik",
+      "prompt": "Napisz 2 zdania do kogoś, kto dopiero zaczyna — jak mały Nieznany.",
+      "sample": "Np. Otwórz terminal. Pierwsza komenda: pwd — pokazuje, gdzie jesteś.",
       "success": "OK",
-      "hint": "tekst"
+      "hint": ""
+    },
+    {
+      "type": "open",
+      "typeLabel": "Praktyczne",
+      "title": "Moja droga",
+      "prompt": "Wypisz 5 rzeczy, których nauczył się Max (lub Ty razem z nim).",
+      "sample": "Terminal, foldery, LED, Python, serwer / projekt…",
+      "success": "OK",
+      "hint": ""
+    },
+    {
+      "type": "find",
+      "typeLabel": "Mini zagadka",
+      "title": "Dlaczego Tata użył imienia „Nieznany”?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Żeby Max sam otwierał drzwi i lepiej zapamiętał drogę"
+        },
+        {
+          "id": "b",
+          "text": "Bo zapomniał własnego imienia"
+        },
+        {
+          "id": "c",
+          "text": "Bo nie lubi herbaty"
+        }
+      ],
+      "answer": "a",
+      "success": "Tak!",
+      "hint": "odkrywca"
     }
   ],
   "summary": [
-    "Max rozwinął umiejętność z rozdziału.",
-    "Technologia była tematem historii o myśleniu.",
-    "Cliffhanger zaprasza dalej."
+    "Nieznany to Tata — ścieżka była darem.",
+    "Dyplom zamyka misję i otwiera dzielenie się.",
+    "Do zobaczenia w kolejnych książkach."
   ],
   "next": null
 };

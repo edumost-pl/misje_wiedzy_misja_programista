@@ -1,0 +1,36 @@
+/* Książka 2 — Misja Kosmos (meta + spis rozdziałów) */
+window.BOOK_KOSMOS = {
+  id: "kosmos",
+  number: 2,
+  title: "Misja Kosmos",
+  subtitle: "Dziennik dziadka i tajemnice nieba",
+  theme: "Czytanie ze zrozumieniem · astronomia jako temat historii",
+  icon: "kosmos",
+  color: "#7C3AED",
+  colorSoft: "#F3E8FF",
+  accent: "#4C1D95",
+  rating: 4,
+  chaptersCount: 10,
+  readingMinutes: 100,
+  level: "3–4 klasa",
+  hero: {
+    name: "Max",
+    age: 10,
+    bio: "Max lubi zagadki, mapy i pytania „a co jeśli…?”. W tej książce odkrywa strych dziadka i tajemnice nocnego nieba — a Ty ćwiczysz czytanie, słownictwo i myślenie.",
+    icon: "max",
+  },
+  description:
+    "To nie podręcznik astronomii. To przygodowa książka do czytania ze zrozumieniem. Max znajduje na strychu skrzynię dziadka — dziennik, mapę nieba i list — a Ty rozwijasz słownictwo, rozumienie tekstu i ciekawość świata. Kosmos jest tematem historii — nie celem samym w sobie.",
+  chapters: [
+    { id: 1, title: "Skrzynia dziadka", icon: "book" },
+    { id: 2, title: "Pierwsza noc z teleskopem", icon: "star" },
+    { id: 3, title: "Tajemnica Księżyca", icon: "kosmos" },
+    { id: 4, title: "Bezpieczne Słońce", icon: "lightbulb" },
+    { id: 5, title: "Rodzina planet", icon: "kosmos" },
+    { id: 6, title: "Start rakiety", icon: "rocket" },
+    { id: 7, title: "Ludzie wśród gwiazd", icon: "explorer" },
+    { id: 8, title: "Wyspy światła", icon: "star" },
+    { id: 9, title: "Obserwatorium", icon: "search" },
+    { id: 10, title: "Największy skarb", icon: "diploma" },
+  ],
+};
