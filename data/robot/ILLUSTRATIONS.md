@@ -2,6 +2,7 @@
 
 Dokument dla generowania / regeneracji **40 scen** książki 3 (v2: legenda Iskry, Iskra jako bohater, łuk drużyny).
 
+
 ## Audyt plików (stan)
 
 | | |

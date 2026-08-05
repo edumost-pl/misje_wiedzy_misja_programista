@@ -1,7 +1,21 @@
-/* PDF / print — A4 book layout for MISJE WIEDZY */
+/* PDF / print — A4 sale-ready book layout (Mission Admin / MISJE WIEDZY) */
+:root {
+  --pdf-ink: #1a2332;
+  --pdf-muted: #4a5568;
+  --pdf-teal: #0f766e;
+  --pdf-teal-soft: #ecfdf8;
+  --pdf-rule: #d0d5dd;
+  --pdf-rule-soft: #e8edf3;
+  --pdf-paper: #ffffff;
+  --pdf-code-bg: #f4f7f6;
+  --pdf-font-display: "Fraunces", Georgia, serif;
+  --pdf-font-body: "Literata", Georgia, "Times New Roman", serif;
+  --pdf-font-ui: "Nunito", system-ui, sans-serif;
+}
+
 @page {
   size: A4 portrait;
-  margin: 18mm 16mm 20mm 16mm;
+  margin: 20mm 18mm 22mm 18mm;
 }
 
 * {
@@ -12,147 +26,301 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #fff;
-  color: #1a2332;
-  font-family: "Literata", Georgia, "Times New Roman", serif;
+  background: var(--pdf-paper);
+  color: var(--pdf-ink);
+  font-family: var(--pdf-font-body);
   font-size: 12pt;
-  line-height: 1.35;
+  line-height: 1.4;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
+  counter-reset: pdfpage;
 }
 
 .book-pdf {
   max-width: 100%;
 }
 
+.book-pdf--kdp {
+  /* Hook for future KDP interior margins — unused in this pass */
+}
+
+/* ——— Cover ——— */
 .book-pdf__cover {
   page-break-after: always;
   break-after: page;
-  min-height: 240mm;
+  min-height: 250mm;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 24mm 10mm;
-  border: 2pt solid #1a2332;
+  padding: 0;
+  border: 0;
+  color: var(--pdf-ink);
+}
+
+.book-pdf__cover-art {
+  width: 100%;
+  max-width: 170mm;
+  margin: 0 auto 8mm;
+}
+
+.book-pdf__cover-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 185mm;
+  object-fit: contain;
+  border-radius: 0;
+}
+
+.book-pdf__cover-text {
+  padding: 0 8mm 10mm;
+  max-width: 160mm;
 }
 
 .book-pdf__series {
-  font-family: "Nunito", system-ui, sans-serif;
-  font-size: 11pt;
+  font-family: var(--pdf-font-ui);
+  font-size: 10pt;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #4a5568;
-  margin: 0 0 18mm;
+  color: var(--pdf-muted);
+  margin: 0 0 4mm;
 }
 
 .book-pdf__badge {
-  font-family: "Nunito", system-ui, sans-serif;
-  font-size: 10pt;
+  font-family: var(--pdf-font-ui);
+  font-size: 9pt;
   font-weight: 800;
-  border: 1.5pt solid currentColor;
+  border: 1.2pt solid var(--pdf-teal);
+  color: var(--pdf-teal);
   border-radius: 999px;
-  padding: 0.35em 1em;
-  margin-bottom: 10mm;
+  padding: 0.3em 0.95em;
+  margin-bottom: 5mm;
+  display: inline-block;
 }
 
 .book-pdf__cover h1 {
-  font-family: "Fraunces", Georgia, serif;
-  font-size: 28pt;
-  line-height: 1.15;
-  margin: 0 0 4mm;
-  max-width: 140mm;
+  font-family: var(--pdf-font-display);
+  font-size: 26pt;
+  line-height: 1.12;
+  margin: 0 0 3mm;
+  max-width: 150mm;
+  color: var(--pdf-ink);
+}
+
+.book-pdf__tagline {
+  font-family: var(--pdf-font-ui);
+  font-size: 12pt;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 3mm;
+  max-width: 145mm;
+  color: var(--pdf-ink);
 }
 
 .book-pdf__sub {
-  font-size: 14pt;
-  color: #4a5568;
-  margin: 0 0 10mm;
+  font-size: 11pt;
+  color: var(--pdf-muted);
+  margin: 0 0 4mm;
 }
 
 .book-pdf__meta {
-  font-family: "Nunito", system-ui, sans-serif;
-  font-size: 10pt;
-  color: #4a5568;
+  font-family: var(--pdf-font-ui);
+  font-size: 9.5pt;
+  color: var(--pdf-muted);
   margin: 0;
 }
 
 .book-pdf__desc {
-  margin-top: 12mm;
-  max-width: 130mm;
-  font-size: 11pt;
-  color: #4a5568;
+  margin-top: 6mm;
+  max-width: 145mm;
+  font-size: 10.5pt;
+  color: var(--pdf-muted);
+  line-height: 1.4;
 }
 
-.book-pdf__toc {
-  page-break-after: always;
-  break-after: page;
+/* ——— Back cover ——— */
+.book-pdf__back {
+  page-break-before: always;
+  break-before: page;
+  min-height: 250mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
+.book-pdf__back-art {
+  width: 100%;
+  max-width: 170mm;
+}
+
+.book-pdf__back-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 220mm;
+  object-fit: contain;
+}
+
+/* ——— Legal / front matter ——— */
+.book-pdf__legal,
+.book-pdf__front,
+.book-pdf__toc,
+.book-pdf__part,
+.book-pdf__chapter,
+.book-pdf__backmatter {
+  page-break-before: always;
+  break-before: page;
+  counter-increment: pdfpage;
+}
+
+.book-pdf__cover + .book-pdf__legal,
+.book-pdf__cover + .book-pdf__front,
+.book-pdf__cover + .book-pdf__toc {
+  /* first matter page after cover still increments */
+}
+
+.book-pdf__legal h2,
+.book-pdf__front h2,
 .book-pdf__toc h2,
-.book-pdf__chapter h2.section,
+.book-pdf__backmatter > h1,
 .book-pdf h2 {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--pdf-font-display);
   font-size: 16pt;
-  margin: 0 0 6mm;
+  margin: 0 0 5mm;
+  color: var(--pdf-ink);
 }
 
-.book-pdf__toc ol {
+.book-pdf__legal p,
+.book-pdf__front p {
+  font-size: 11pt;
+  line-height: 1.45;
+  margin: 0 0 3.5mm;
+  color: var(--pdf-ink);
+}
+
+.book-pdf__legal .book-pdf__copyright {
+  margin-top: 10mm;
+  padding-top: 4mm;
+  border-top: 0.5pt solid var(--pdf-rule);
+  font-family: var(--pdf-font-ui);
+  font-size: 9pt;
+  color: var(--pdf-muted);
+}
+
+.book-pdf__front ul {
+  margin: 0 0 5mm;
+  padding-left: 5mm;
+}
+
+.book-pdf__front li {
+  margin: 0 0 2.5mm;
+  font-size: 11pt;
+}
+
+/* ——— TOC with parts ——— */
+.book-pdf__toc-part {
+  margin: 0 0 6mm;
+  page-break-inside: avoid;
+}
+
+.book-pdf__toc-part h3 {
+  font-family: var(--pdf-font-ui);
+  font-size: 11pt;
+  font-weight: 800;
+  color: var(--pdf-teal);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1pt solid var(--pdf-teal);
+}
+
+.book-pdf__toc-part ol {
   margin: 0;
   padding-left: 6mm;
 }
 
-.book-pdf__toc li {
-  margin: 0 0 3mm;
-  font-size: 12pt;
+.book-pdf__toc-part li {
+  margin: 0 0 1.8mm;
+  font-size: 11pt;
 }
 
-.book-pdf__chapter {
-  page-break-before: always;
-  break-before: page;
+/* ——— Part opener ——— */
+.book-pdf__part {
+  min-height: 230mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.book-pdf__chapter:first-of-type {
-  page-break-before: auto;
-  break-before: auto;
-}
-
-.book-pdf__ch-label {
-  font-family: "Nunito", system-ui, sans-serif;
+.book-pdf__part-label {
+  font-family: var(--pdf-font-ui);
   font-size: 10pt;
   font-weight: 800;
-  color: #4a5568;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pdf-teal);
+  margin: 0 0 3mm;
+}
+
+.book-pdf__part h1 {
+  font-family: var(--pdf-font-display);
+  font-size: 24pt;
+  line-height: 1.15;
+  margin: 0 0 6mm;
+}
+
+.book-pdf__part figure {
+  margin: 0 auto;
+  max-width: 160mm;
+}
+
+.book-pdf__part figure img {
+  max-height: 130mm;
+  border-radius: 0;
+}
+
+/* ——— Chapter ——— */
+.book-pdf__ch-label {
+  font-family: var(--pdf-font-ui);
+  font-size: 9.5pt;
+  font-weight: 800;
+  color: var(--pdf-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin: 0 0 2mm;
 }
 
 .book-pdf__chapter > h1 {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--pdf-font-display);
   font-size: 20pt;
   line-height: 1.2;
-  margin: 0 0 2mm;
+  margin: 0 0 4mm;
+  padding-bottom: 3mm;
+  border-bottom: 1.5pt solid var(--pdf-teal);
 }
 
 .book-pdf__ch-sub {
   font-size: 11pt;
-  color: #4a5568;
+  color: var(--pdf-muted);
   font-style: italic;
   margin: 0 0 4mm;
 }
 
 .book-pdf__intro {
   font-size: 11pt;
-  color: #4a5568;
+  color: var(--pdf-muted);
   margin: 0 0 6mm;
   padding-bottom: 4mm;
-  border-bottom: 0.5pt solid #d0d5dd;
+  border-bottom: 0.5pt solid var(--pdf-rule);
 }
 
 .book-pdf__story p {
-  margin: 0 0 3.2mm;
+  margin: 0 0 3mm;
   font-size: 12pt;
   orphans: 3;
   widows: 3;
@@ -167,31 +335,172 @@ body {
   font-weight: 700;
 }
 
+.book-pdf__story ul,
+.book-pdf__story ol {
+  margin: 0 0 3.5mm;
+  padding-left: 5.5mm;
+}
+
+.book-pdf__story li {
+  margin: 0 0 1.5mm;
+  font-size: 11.5pt;
+}
+
+.book-pdf__story h2 {
+  font-family: var(--pdf-font-display);
+  font-size: 14pt;
+  margin: 5mm 0 3mm;
+  color: var(--pdf-ink);
+}
+
+/* ——— Figures / heroes ——— */
 .book-pdf figure {
-  margin: 5mm auto;
+  margin: 4mm auto;
   text-align: center;
   page-break-inside: avoid;
   break-inside: avoid;
-  max-width: 140mm;
+  max-width: 150mm;
 }
 
 .book-pdf figure img {
   max-width: 100%;
-  max-height: 95mm;
+  max-height: 75mm;
   width: auto;
   height: auto;
   display: block;
   margin: 0 auto;
-  border-radius: 2mm;
+  border-radius: 1mm;
+}
+
+.book-pdf figure.book-pdf__hero {
+  max-width: 165mm;
+  margin: 5mm auto 6mm;
+}
+
+.book-pdf figure.book-pdf__hero img {
+  max-height: 125mm;
+  border-radius: 0;
 }
 
 .book-pdf figcaption {
-  font-family: "Nunito", system-ui, sans-serif;
-  font-size: 9pt;
-  color: #4a5568;
+  font-family: var(--pdf-font-ui);
+  font-size: 8.5pt;
+  color: var(--pdf-muted);
   margin-top: 2mm;
 }
 
+/* ——— Code / terminal ——— */
+.book-pdf .nf-code,
+.book-pdf pre.nf-code {
+  margin: 3.5mm 0;
+  padding: 3mm 3.5mm;
+  background: var(--pdf-code-bg);
+  border-left: 2.5pt solid var(--pdf-teal);
+  border-radius: 0 1.5mm 1.5mm 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 8.5pt;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.book-pdf .nf-code-prompt {
+  color: var(--pdf-teal);
+  font-weight: 700;
+}
+
+.book-pdf .nf-code-cmd {
+  font-weight: 700;
+}
+
+.book-pdf .nf-code-comment {
+  color: var(--pdf-muted);
+  font-style: italic;
+}
+
+/* ——— NF print blocks (no web chrome) ——— */
+.book-pdf .nf-print-block {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin: 3.5mm 0;
+  padding: 2.5mm 0 2.5mm 3.5mm;
+  border: 0;
+  border-left: 2.5pt solid var(--pdf-teal);
+  border-radius: 0;
+  background: transparent;
+}
+
+.book-pdf .nf-print-block--fact {
+  border-left-color: var(--pdf-teal);
+  background: var(--pdf-teal-soft);
+  padding: 3mm 4mm 3mm 4mm;
+  border-left-width: 2.5pt;
+}
+
+.book-pdf .nf-print-block--think,
+.book-pdf .nf-print-block--reveal {
+  border-left-color: #64748b;
+}
+
+.book-pdf .nf-print-block--try {
+  border-left-color: var(--pdf-teal);
+}
+
+.book-pdf .nf-print-block--diary,
+.book-pdf .nf-print-block--draw {
+  border-left-color: #94a3b8;
+}
+
+.book-pdf .nf-print-block--errors {
+  border-left-color: #b45309;
+}
+
+.book-pdf .nf-print-block--callout,
+.book-pdf .nf-print-block--wow,
+.book-pdf .nf-print-block--diagram {
+  border-left-color: var(--pdf-teal);
+}
+
+.book-pdf .nf-print-label {
+  font-family: var(--pdf-font-ui);
+  font-size: 8.5pt;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pdf-teal);
+  margin: 0 0 1.5mm;
+}
+
+.book-pdf .nf-callout,
+.book-pdf .nf-wow,
+.book-pdf .nf-diagram,
+.book-pdf .nf-spread {
+  break-inside: avoid;
+  margin: 3.5mm 0;
+  padding: 2.5mm 0 2.5mm 3.5mm;
+  border: 0;
+  border-left: 2.5pt solid var(--pdf-teal);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.book-pdf .nf-spread__callout-num,
+.book-pdf .nf-diagram__num {
+  background: var(--pdf-teal);
+  color: #fff;
+}
+
+.book-pdf .nf-class-track {
+  break-inside: avoid;
+  margin: 5mm 0;
+  padding: 3mm 0 3mm 3.5mm;
+  border-left: 2.5pt solid var(--pdf-teal);
+}
+
+/* ——— Sections / words / fact (story books) ——— */
 .book-pdf__section {
   page-break-before: always;
   break-before: page;
@@ -205,12 +514,12 @@ body {
 .book-pdf__word {
   margin: 0 0 4mm;
   padding-bottom: 3mm;
-  border-bottom: 0.4pt solid #e5e7eb;
+  border-bottom: 0.4pt solid var(--pdf-rule-soft);
   page-break-inside: avoid;
 }
 
 .book-pdf__word h3 {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: var(--pdf-font-display);
   font-size: 12pt;
   margin: 0 0 1.5mm;
 }
@@ -221,24 +530,26 @@ body {
 }
 
 .book-pdf__word .label {
-  font-family: "Nunito", system-ui, sans-serif;
+  font-family: var(--pdf-font-ui);
   font-size: 8.5pt;
   font-weight: 800;
   text-transform: uppercase;
-  color: #4a5568;
+  color: var(--pdf-muted);
 }
 
 .book-pdf__fact {
   margin: 5mm 0;
-  padding: 4mm;
-  border: 0.8pt solid #d0d5dd;
-  border-radius: 2mm;
+  padding: 3mm 4mm;
+  border: 0;
+  border-left: 2.5pt solid var(--pdf-teal);
+  border-radius: 0;
+  background: var(--pdf-teal-soft);
   page-break-inside: avoid;
   font-size: 11pt;
 }
 
 .book-pdf__fact h3 {
-  font-family: "Nunito", system-ui, sans-serif;
+  font-family: var(--pdf-font-ui);
   font-size: 10pt;
   margin: 0 0 2mm;
 }
@@ -259,10 +570,10 @@ body {
 }
 
 .book-pdf__questions .tag {
-  font-family: "Nunito", system-ui, sans-serif;
+  font-family: var(--pdf-font-ui);
   font-size: 8.5pt;
   font-weight: 800;
-  color: #4a5568;
+  color: var(--pdf-muted);
   text-transform: uppercase;
 }
 
@@ -276,28 +587,152 @@ body {
   font-size: 12pt;
 }
 
+/* ——— Page footer with counter ——— */
 .book-pdf__footer {
-  margin-top: 10mm;
-  padding-top: 4mm;
-  border-top: 0.5pt solid #d0d5dd;
-  font-family: "Nunito", system-ui, sans-serif;
-  font-size: 9pt;
-  color: #4a5568;
+  margin-top: 8mm;
+  padding-top: 3mm;
+  border-top: 0.5pt solid var(--pdf-rule);
+  font-family: var(--pdf-font-ui);
+  font-size: 8.5pt;
+  color: var(--pdf-muted);
   text-align: center;
 }
 
+.book-pdf__footer::after {
+  content: " · " counter(pdfpage);
+}
+
+.book-pdf__cover .book-pdf__footer,
+.book-pdf__back .book-pdf__footer {
+  display: none;
+}
+
+/* ——— Check yourself ——— */
+.book-pdf .nf-check-lead {
+  font-size: 11pt;
+  line-height: 1.5;
+  margin: 0 0 4mm;
+  color: var(--pdf-muted);
+}
+
+.book-pdf .nf-check-list {
+  margin-bottom: 5mm;
+}
+
+.book-pdf .nf-check-item,
+.book-pdf .nf-check-hint-item,
+.book-pdf .nf-check-answer-item {
+  margin: 0 0 3.5mm;
+  padding: 2.5mm 0 2.5mm 3mm;
+  border: 0;
+  border-left: 1.5pt solid var(--pdf-rule);
+  border-radius: 0;
+  break-inside: avoid;
+}
+
+.book-pdf .nf-check-section {
+  margin-top: 6mm;
+  padding: 3mm 0 3mm 3.5mm;
+  border: 0;
+  border-left: 2.5pt solid var(--pdf-teal);
+  border-radius: 0;
+  break-inside: avoid;
+}
+
+.book-pdf .nf-check-section h3 {
+  margin: 0 0 3mm;
+  font-size: 12pt;
+  font-family: var(--pdf-font-display);
+}
+
+.book-pdf .nf-check-hints--pdf {
+  background: transparent;
+}
+
+.book-pdf .nf-check-answers--pdf {
+  background: transparent;
+  break-before: page;
+  page-break-before: always;
+  margin-top: 0;
+  counter-increment: pdfpage;
+}
+
+.book-pdf .nf-check-answers-note {
+  font-size: 10pt;
+  color: var(--pdf-muted);
+  margin: 0 0 3mm;
+}
+
+.book-pdf .nf-check-answer-label {
+  font-size: 10pt;
+  font-weight: 700;
+  color: var(--pdf-muted);
+}
+
+.book-pdf .nf-check-answer-value {
+  font-size: 11.5pt;
+  font-weight: 800;
+}
+
+.book-pdf .nf-check-why {
+  font-size: 10.5pt;
+  line-height: 1.45;
+}
+
+.book-pdf details.nf-check-panel {
+  display: none;
+}
+
+/* ——— Glossary / index ——— */
+.book-pdf .nf-glossary-list {
+  columns: 2;
+  column-gap: 8mm;
+  margin: 0 0 8mm;
+  font-size: 9.5pt;
+}
+
+.book-pdf .nf-glossary-list dt {
+  font-family: var(--pdf-font-ui);
+  font-weight: 800;
+  color: var(--pdf-teal);
+  margin-top: 2mm;
+  break-after: avoid;
+}
+
+.book-pdf .nf-glossary-list dd {
+  margin: 0 0 2mm;
+  color: var(--pdf-ink);
+  break-before: avoid;
+}
+
+.book-pdf .nf-index-list {
+  columns: 2;
+  column-gap: 8mm;
+  margin: 0;
+  padding-left: 4mm;
+  font-size: 10pt;
+}
+
+.book-pdf .nf-index-list li {
+  margin: 0 0 1.5mm;
+  break-inside: avoid;
+}
+
+/* ——— Screen preview chrome ——— */
 @media screen {
   body {
     background: #e8e4dc;
     padding: 16px;
   }
+
   .book-pdf {
     max-width: 210mm;
     margin: 0 auto;
-    background: #fff;
+    background: var(--pdf-paper);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    padding: 18mm 16mm;
+    padding: 20mm 18mm;
   }
+
   .pdf-toolbar {
     position: sticky;
     top: 0;
@@ -307,12 +742,15 @@ body {
     display: flex;
     gap: 8px;
     justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
     padding: 10px;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    font-family: "Nunito", system-ui, sans-serif;
+    font-family: var(--pdf-font-ui);
   }
+
   .pdf-toolbar button {
     font: inherit;
     font-weight: 800;
@@ -320,12 +758,18 @@ body {
     border-radius: 999px;
     padding: 0.7em 1.4em;
     cursor: pointer;
-    background: #1d6fd8;
+    background: var(--pdf-teal);
     color: #fff;
   }
+
   .pdf-toolbar button.secondary {
     background: #eef2f7;
-    color: #1a2332;
+    color: var(--pdf-ink);
+  }
+
+  .pdf-toolbar span {
+    font-size: 12px;
+    color: var(--pdf-muted);
   }
 }
 
@@ -333,10 +777,12 @@ body {
   .pdf-toolbar {
     display: none !important;
   }
+
   body {
     background: #fff;
     padding: 0;
   }
+
   .book-pdf {
     box-shadow: none;
     padding: 0;

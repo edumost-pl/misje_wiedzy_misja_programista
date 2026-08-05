@@ -109,13 +109,93 @@
     return "assets/icons/" + name + ".svg";
   }
 
-  function illPath(name) {
-    // Book scenes: WebP only in assets/illustrations/scenes/
+  var activeIllustrationBookId = null;
+  var activeNfLang = "uk";
+
+  function setActiveNfBook(book) {
+    if (book && book.id) activeIllustrationBookId = book.id;
+    activeNfLang = book && book.lang === "en" ? "en" : "uk";
+  }
+
+  function nfT(uk, en) {
+    return activeNfLang === "en" ? en : uk;
+  }
+
+  var BOOK_ILLUSTRATION_FOLDERS = {
+    sysadmin: "rasberi",
+    sysadmin_en: "rasberi",
+  };
+
+  function isSysadminBook(bookId) {
+    return bookId === "sysadmin" || bookId === "sysadmin_en";
+  }
+
+  function loadSysadminExtras(bookId) {
+    if (!isSysadminBook(bookId)) return Promise.resolve();
+    var p = loadScript("data/" + bookId + "/class-without-pi.js");
+    if (bookId === "sysadmin_en") {
+      p = p
+        .then(function () {
+          return loadScript("data/sysadmin_en/glossary.js");
+        })
+        .then(function () {
+          return loadScript("data/sysadmin_en/index.js");
+        });
+    }
+    return p;
+  }
+
+  function renderMergedGlossaryHtml(book) {
+    if (book.lang !== "en") return "";
+    var gloss = window.BOOK_SYSADMIN_EN_GLOSSARY || [];
+    var idx = window.BOOK_SYSADMIN_EN_INDEX || [];
+    if (!gloss.length && !idx.length) return "";
+    var glossHtml = gloss.length
+      ? "<h3>Glossary</h3><dl class=\"nf-glossary-list\">" +
+        gloss
+          .map(function (g) {
+            return (
+              "<dt>" +
+              escapeHtml(g.term) +
+              "</dt><dd>" +
+              escapeHtml(g.def) +
+              "</dd>"
+            );
+          })
+          .join("") +
+        "</dl>"
+      : "";
+    var indexHtml = idx.length
+      ? "<h3>Subject index</h3><ul class=\"nf-index-list\">" +
+        idx
+          .map(function (row) {
+            return (
+              "<li><strong>" +
+              escapeHtml(row.term) +
+              "</strong> — ch. " +
+              (row.chapterIds || []).join(", ") +
+              "</li>"
+            );
+          })
+          .join("") +
+        "</ul>"
+      : "";
+    return glossHtml + indexHtml;
+  }
+
+  function illustrationFolder(bookId) {
+    return BOOK_ILLUSTRATION_FOLDERS[bookId] || "scenes";
+  }
+
+  function illPath(name, bookId) {
+    bookId = bookId || activeIllustrationBookId;
+    var folder = illustrationFolder(bookId);
+    var base = "assets/illustrations/" + folder + "/";
     if (name.indexOf(".") !== -1) {
-      if (name.indexOf("/") === -1) return "assets/illustrations/scenes/" + name;
+      if (name.indexOf("/") === -1) return base + name;
       return "assets/illustrations/" + name;
     }
-    return "assets/illustrations/scenes/" + name + ".webp";
+    return base + name + ".webp";
   }
 
   function qs(name) {
@@ -189,8 +269,10 @@
           i * 0.05 +
           's">' +
           '<div class="book-spine__cover">' +
-          '<span class="book-spine__num">Książka ' +
+          '<span class="book-spine__num">' +
+          (book.lang === "uk" ? "Книга " : "Książka ") +
           book.number +
+          (book.lang === "uk" ? " · UA" : "") +
           "</span>" +
           '<img src="' +
           iconPath(book.icon) +
@@ -201,7 +283,7 @@
           escapeHtml(book.title) +
           "</h2>" +
           "<p>" +
-          escapeHtml(book.subtitle) +
+          escapeHtml(book.tagline || book.subtitle) +
           "</p>" +
           '<div class="book-spine__meta">' +
           "<span>" +
@@ -246,6 +328,9 @@
 
     loadScript("data/" + bookId + "/book.js")
       .then(function () {
+        return loadSysadminExtras(bookId);
+      })
+      .then(function () {
         var book =
           window["BOOK_" + bookId.toUpperCase()] ||
           window.BOOK_PROGRAMISTA;
@@ -261,8 +346,242 @@
       });
   }
 
+  function paintNonfictionBook(root, book, meta) {
+    setActiveNfBook(book);
+    var en = book.lang === "en";
+    document.title =
+      (en ? "Book " : "Книга ") + book.number + " · " + book.title + " · MISJE WIEDZY";
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        "content",
+        (book.tagline ? book.tagline + " — " : "") + (book.description || "").replace(/\*\*/g, "")
+      );
+    }
+    document.documentElement.style.setProperty("--book-color", book.color);
+    document.documentElement.style.setProperty("--book-soft", book.colorSoft);
+    document.documentElement.style.setProperty("--book-accent", book.accent);
+
+    var firstOpen = 1;
+    for (var i = 1; i <= book.chaptersCount; i++) {
+      if (!chapterDone(book.id, i)) {
+        firstOpen = i;
+        break;
+      }
+      if (i === book.chaptersCount) firstOpen = 1;
+    }
+
+    var partsHtml = (book.parts || [])
+      .map(function (part) {
+        var items = book.chapters
+          .filter(function (ch) {
+            return part.chapters.indexOf(ch.id) !== -1;
+          })
+          .map(function (ch) {
+            var done = chapterDone(book.id, ch.id);
+            return (
+              '<a class="toc-item' +
+              (done ? " is-done" : "") +
+              '" href="chapter.html?book=' +
+              book.id +
+              "&id=" +
+              ch.id +
+              '"><span class="toc-item__num">' +
+              ch.id +
+              '</span><img src="' +
+              iconPath(ch.icon) +
+              '" alt=""><span>' +
+              escapeHtml(ch.title) +
+              "</span></a>"
+            );
+          })
+          .join("");
+        return (
+          '<div class="nf-part-block"><h3>' +
+          (en ? "Part " : "Частина ") +
+          part.id +
+          ". " +
+          escapeHtml(part.title) +
+          '</h3><div class="toc-list">' +
+          items +
+          "</div></div>"
+        );
+      })
+      .join("");
+
+    var how = ((book.frontMatter && book.frontMatter.howToUse) || [])
+      .map(function (x) {
+        return "<li>" + escapeHtml(x) + "</li>";
+      })
+      .join("");
+    var withAdult = (book.frontMatter && book.frontMatter.withAdult) || "";
+    var withoutPi = (book.frontMatter && book.frontMatter.withoutPi) || "";
+    var classTrack = window.SYSADMIN_CLASS_WITHOUT_PI || null;
+    var forClass = (classTrack && classTrack.forClass) || "";
+
+    root.innerHTML =
+      '<a class="back-link" href="index.html">' +
+      (en ? "← Book shelf" : "← Полиця з книгами") +
+      "</a>" +
+      '<section class="book-cover" style="--book-color:' +
+      book.color +
+      ";--book-accent:" +
+      book.accent +
+      '">' +
+      '<div class="book-cover__badge">' +
+      (en ? "Book " : "Книга ") +
+      book.number +
+      (en ? " · EN · Pi + Linux + game server" : " · UA · Minecraft + Linux") +
+      "</div>" +
+      '<img class="book-cover__icon" src="' +
+      iconPath(book.icon) +
+      '" alt="">' +
+      "<h1>" +
+      escapeHtml(book.title) +
+      "</h1>" +
+      (book.tagline
+        ? '<p class="book-cover__tagline">' + escapeHtml(book.tagline) + "</p>"
+        : "") +
+      '<p class="book-cover__sub">' +
+      escapeHtml(book.subtitle) +
+      "</p>" +
+      '<div class="book-cover__stars">' +
+      starsHtml(book.rating) +
+      "</div>" +
+      '<div class="book-cover__stats">' +
+      "<div><strong>" +
+      book.chaptersCount +
+      "</strong><span>" +
+      (en ? "chapters" : "розділів") +
+      "</span></div>" +
+      "<div><strong>~" +
+      book.readingMinutes +
+      " min</strong><span>" +
+      (en ? "reading time" : "час читання") +
+      "</span></div>" +
+      "<div><strong>" +
+      escapeHtml(book.level) +
+      "</strong><span>" +
+      (en ? "ages" : "вік") +
+      "</span></div></div></section>" +
+      '<section class="book-panel"><h2>' +
+      (en ? "Preface" : "Передмова") +
+      "</h2><p>" +
+      formatInlineNF((book.frontMatter && book.frontMatter.preface) || book.description) +
+      "</p></section>" +
+      (book.frontMatter && book.frontMatter.legalNote
+        ? '<section class="book-panel"><h2>' +
+          (en ? "Trademark notice" : "Правова нотатка") +
+          "</h2><p>" +
+          formatInlineNF(book.frontMatter.legalNote) +
+          "</p></section>"
+        : "") +
+      (withAdult
+        ? '<section class="book-panel book-panel--warm"><h2>' +
+          (en ? "👨‍👩‍👧 Read together" : "👨‍👩‍👧 Читай разом") +
+          "</h2><p>" +
+          formatInlineNF(withAdult) +
+          "</p></section>"
+        : "") +
+      (withoutPi
+        ? '<section class="book-panel book-panel--warm"><h2>' +
+          (en ? "🌱 No Pi yet?" : "🌱 Немає Pi зараз?") +
+          "</h2><p>" +
+          formatInlineNF(withoutPi) +
+          "</p></section>"
+        : "") +
+      (forClass
+        ? '<section class="book-panel book-panel--class"><h2>' +
+          (en ? "🏫 For class without a Pi" : "🏫 Для класу без Pi") +
+          "</h2><p>" +
+          formatInlineNF(forClass) +
+          "</p>" +
+          (classTrack && classTrack.tracks
+            ? '<div class="nf-tracks">' +
+              classTrack.tracks
+                .map(function (t) {
+                  return (
+                    '<div class="nf-track"><strong>' +
+                    escapeHtml(t.label) +
+                    "</strong><p>" +
+                    formatInlineNF(t.text) +
+                    "</p></div>"
+                  );
+                })
+                .join("") +
+              "</div>"
+            : "") +
+          (classTrack && classTrack.sharedTools
+            ? "<h3>" +
+              (en ? "Shared Track B tools" : "Спільні інструменти треку B") +
+              "</h3><ul>" +
+              classTrack.sharedTools
+                .map(function (x) {
+                  return "<li>" + formatInlineNF(x) + "</li>";
+                })
+                .join("") +
+              "</ul>"
+            : "") +
+          "</section>"
+        : "") +
+      '<section class="book-panel"><h2>' +
+      (en ? "How to use this book" : "Як користуватися книгою") +
+      "</h2><ul>" +
+      how +
+      "</ul></section>" +
+      '<section class="book-panel"><h2>' +
+      (en ? "About this book" : "Короткий опис") +
+      "</h2><p>" +
+      escapeHtml(book.description) +
+      "</p></section>" +
+      '<section class="book-panel"><h2>' +
+      (en ? "Contents" : "Зміст") +
+      "</h2>" +
+      partsHtml +
+      "</section>" +
+      '<section class="book-panel"><h2>' +
+      (en ? "Glossary & index" : "Словник і покажчик") +
+      "</h2><p>" +
+      escapeHtml((book.backMatter && book.backMatter.glossaryNote) || "") +
+      "</p><p>" +
+      escapeHtml((book.backMatter && book.backMatter.indexNote) || "") +
+      "</p>" +
+      renderMergedGlossaryHtml(book) +
+      "</section>" +
+      '<div class="book-actions">' +
+      '<a class="btn btn--primary btn--wide" href="chapter.html?book=' +
+      book.id +
+      "&id=" +
+      firstOpen +
+      '">' +
+      (en ? "▶ Start the book" : "▶ Почати книгу") +
+      "</a>" +
+      '<button type="button" class="btn btn--ghost btn--wide" data-export-pdf="' +
+      book.id +
+      '">' +
+      (en ? "📄 Save book as PDF (A4)" : "📄 Зберегти книгу як PDF (A4)") +
+      "</button></div>";
+
+    var pdfBtn = root.querySelector("[data-export-pdf]");
+    if (pdfBtn) {
+      pdfBtn.addEventListener("click", function () {
+        exportBookPdf(book.id);
+      });
+    }
+  }
+
   function paintBook(root, book, meta) {
-    document.title = "Książka " + book.number + " · " + book.title + " · MISJE WIEDZY";
+    if (book.format === "nonfiction") {
+      paintNonfictionBook(root, book, meta);
+      return;
+    }
+    var uk = book.lang === "uk";
+    document.title =
+      (uk ? "Книга " : "Książka ") +
+      book.number +
+      " · " +
+      book.title +
+      " · MISJE WIEDZY";
     document.documentElement.style.setProperty("--book-color", book.color);
     document.documentElement.style.setProperty("--book-soft", book.colorSoft);
     document.documentElement.style.setProperty("--book-accent", book.accent);
@@ -288,7 +607,7 @@
           ch.id +
           '">' +
           '<span class="toc-item__num">' +
-          (done ? "✓" : ch.id) +
+          ch.id +
           "</span>" +
           '<img src="' +
           iconPath(ch.icon) +
@@ -302,14 +621,18 @@
       .join("");
 
     root.innerHTML =
-      '<a class="back-link" href="index.html">← Półka z książkami</a>' +
+      '<a class="back-link" href="index.html">' +
+      (uk ? "← Полиця з книгами" : "← Półka z książkami") +
+      "</a>" +
       '<section class="book-cover" style="--book-color:' +
       book.color +
       ";--book-accent:" +
       book.accent +
       '">' +
-      '<div class="book-cover__badge">Książka ' +
+      '<div class="book-cover__badge">' +
+      (uk ? "Книга " : "Książka ") +
       book.number +
+      (uk ? " · UA" : "") +
       "</div>" +
       '<img class="book-cover__icon" src="' +
       iconPath(book.icon) +
@@ -317,26 +640,39 @@
       "<h1>" +
       escapeHtml(book.title) +
       "</h1>" +
+      (book.tagline
+        ? '<p class="book-cover__tagline">' + escapeHtml(book.tagline) + "</p>"
+        : "") +
       '<p class="book-cover__sub">' +
       escapeHtml(book.subtitle) +
       "</p>" +
-      '<div class="book-cover__stars" aria-label="Ocena">' +
+      '<div class="book-cover__stars" aria-label="' +
+      (uk ? "Оцінка" : "Ocena") +
+      '">' +
       starsHtml(book.rating) +
       "</div>" +
       '<div class="book-cover__stats">' +
       "<div><strong>" +
       book.chaptersCount +
-      "</strong><span>rozdziałów</span></div>" +
+      "</strong><span>" +
+      (uk ? "розділів" : "rozdziałów") +
+      "</span></div>" +
       "<div><strong>~" +
       book.readingMinutes +
-      " min</strong><span>czas czytania</span></div>" +
+      " min</strong><span>" +
+      (uk ? "час читання" : "czas czytania") +
+      "</span></div>" +
       "<div><strong>" +
       escapeHtml(book.level) +
-      "</strong><span>poziom</span></div>" +
+      "</strong><span>" +
+      (uk ? "вік" : "poziom") +
+      "</span></div>" +
       "</div>" +
       "</section>" +
       '<section class="book-panel">' +
-      "<h2>Krótki opis</h2>" +
+      "<h2>" +
+      (uk ? "Короткий опис" : "Krótki opis") +
+      "</h2>" +
       "<p>" +
       escapeHtml(book.description) +
       "</p>" +
@@ -345,14 +681,17 @@
       '<img src="' +
       iconPath(book.hero.icon) +
       '" alt="">' +
-      "<div><h2>Bohater · " +
+      "<div><h2>" +
+      (uk ? "Для кого · " : "Bohater · ") +
       escapeHtml(book.hero.name) +
       "</h2><p>" +
       escapeHtml(book.hero.bio) +
       "</p></div>" +
       "</section>" +
       '<section class="book-panel">' +
-      "<h2>Spis treści</h2>" +
+      "<h2>" +
+      (uk ? "Зміст" : "Spis treści") +
+      "</h2>" +
       '<div class="toc-list">' +
       toc +
       "</div>" +
@@ -362,10 +701,14 @@
       book.id +
       "&id=" +
       firstOpen +
-      '">▶ Rozpocznij książkę</a>' +
+      '">' +
+      (uk ? "▶ Почати книгу" : "▶ Rozpocznij książkę") +
+      "</a>" +
       '<button type="button" class="btn btn--ghost btn--wide" data-export-pdf="' +
       book.id +
-      '">📄 Zapisz książkę jako PDF (A4)</button>' +
+      '">' +
+      (uk ? "📄 Зберегти книгу як PDF (A4)" : "📄 Zapisz książkę jako PDF (A4)") +
+      "</button>" +
       "</div>";
     var pdfBtn = root.querySelector("[data-export-pdf]");
     if (pdfBtn) {
@@ -435,7 +778,7 @@
       .join("");
   }
 
-  function renderWords(words) {
+  function renderWords(words, uk) {
     return (
       '<div class="word-grid">' +
       words
@@ -452,6 +795,20 @@
               escapeHtml(w.term) +
               '" loading="lazy" onerror="this.style.display=\'none\'">'
             : '<div class="word-card__art word-card__art--empty" aria-hidden="true"></div>';
+          var whatL = uk ? "Що це?" : "Co to jest?";
+          var whyL = uk ? "Навіщо?" : "Do czego służy?";
+          var remL = uk ? "Запам’ятай" : "Zapamiętaj";
+          var uaBlock = uk
+            ? ""
+            : '<div class="ua-panel"><button type="button" class="ua-toggle" aria-expanded="false" data-ua-toggle>Pokaż po ukraińsku</button>' +
+              '<div class="ua-content" data-ua-content hidden>' +
+              "<p><strong>Що це?</strong> " +
+              escapeHtml((w.ua && w.ua.what) || w.what) +
+              "</p><p><strong>Навіщо?</strong> " +
+              escapeHtml((w.ua && w.ua.why) || w.why) +
+              "</p><p><strong>Запамʼятай</strong> " +
+              escapeHtml((w.ua && w.ua.remember) || w.remember) +
+              "</p></div></div>";
           return (
             '<article class="word-card">' +
             artBlock +
@@ -459,24 +816,23 @@
             '<h3 class="word-card__term">' +
             escapeHtml(w.term) +
             "</h3>" +
-            '<div class="word-block"><h4>Co to jest?</h4><p>' +
+            '<div class="word-block"><h4>' +
+            whatL +
+            "</h4><p>" +
             escapeHtml(w.what) +
             "</p></div>" +
-            '<div class="word-block"><h4>Do czego służy?</h4><p>' +
+            '<div class="word-block"><h4>' +
+            whyL +
+            "</h4><p>" +
             escapeHtml(w.why) +
             "</p></div>" +
-            '<div class="word-block"><h4>Zapamiętaj</h4><p>' +
+            '<div class="word-block"><h4>' +
+            remL +
+            "</h4><p>" +
             escapeHtml(w.remember) +
             "</p></div>" +
-            '<div class="ua-panel"><button type="button" class="ua-toggle" aria-expanded="false" data-ua-toggle>Pokaż po ukraińsku</button>' +
-            '<div class="ua-content" data-ua-content hidden>' +
-            "<p><strong>Що це?</strong> " +
-            escapeHtml(w.ua.what) +
-            "</p><p><strong>Навіщо?</strong> " +
-            escapeHtml(w.ua.why) +
-            "</p><p><strong>Запамʼятай</strong> " +
-            escapeHtml(w.ua.remember) +
-            "</p></div></div></div></article>"
+            uaBlock +
+            "</div></article>"
           );
         })
         .join("") +
@@ -902,6 +1258,7 @@
 
     Promise.all([
       loadScript("data/" + bookId + "/book.js"),
+      loadSysadminExtras(bookId),
       loadScript(
         "data/" + bookId + "/chapter" + String(chapterId).padStart(2, "0") + ".js"
       ),
@@ -925,9 +1282,747 @@
       });
   }
 
-  function paintChapter(root, book, chapter) {
+
+  function formatInlineNF(text) {
+    return escapeHtml(String(text || ""))
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+      .replace(/\n/g, "<br>");
+  }
+
+  /** Terminal/code block: UA comments (#…), prompt user@host:path$ cmd, output lines. */
+  function formatNFCode(text) {
+    return String(text || "")
+      .split("\n")
+      .map(function (line) {
+        var esc = escapeHtml(line);
+        if (/^\s*#/.test(line)) {
+          return '<span class="nf-code-comment">' + esc + "</span>";
+        }
+        var m = line.match(/^(\S+@\S+:\S+\$)(\s*)(.*)$/);
+        if (m) {
+          return (
+            '<span class="nf-code-prompt">' +
+            escapeHtml(m[1]) +
+            "</span>" +
+            escapeHtml(m[2]) +
+            (m[3]
+              ? '<span class="nf-code-cmd">' + escapeHtml(m[3]) + "</span>"
+              : "")
+          );
+        }
+        if (line.trim() === "") return "";
+        return '<span class="nf-code-out">' + esc + "</span>";
+      })
+      .join("\n");
+  }
+
+  function renderNFCodeBlock(b) {
+    return (
+      '<pre class="nf-code" data-lang="terminal"><code>' +
+      formatNFCode(b.text) +
+      "</code></pre>"
+    );
+  }
+
+  function renderNFCallout(b) {
+    var variant = b.variant || "note";
+    return (
+      '<aside class="nf-callout nf-callout--' +
+      escapeHtml(variant) +
+      '">' +
+      (b.point
+        ? '<span class="nf-callout__point" aria-hidden="true">' +
+          escapeHtml(b.point) +
+          "</span>"
+        : "") +
+      '<div class="nf-callout__body">' +
+      (b.title
+        ? '<p class="nf-callout__title">' + escapeHtml(b.title) + "</p>"
+        : "") +
+      (b.text ? "<p>" + formatInlineNF(b.text) + "</p>" : "") +
+      "</div></aside>"
+    );
+  }
+
+  function renderNFWow(b) {
+    return (
+      '<aside class="nf-wow">' +
+      '<div class="nf-rubric">' +
+      escapeHtml(b.title || nfT("✨ Це дивовижно!", "✨ Wow!")) +
+      "</div>" +
+      (b.text ? "<p>" + formatInlineNF(b.text) + "</p>" : "") +
+      "</aside>"
+    );
+  }
+
+  function renderNFDiagram(b) {
+    var layout = b.layout || "stack";
+    var items = (b.items || [])
+      .map(function (it, idx) {
+        var label = typeof it === "string" ? it : it.label || "";
+        var text = typeof it === "string" ? "" : it.text || "";
+        return (
+          '<div class="nf-diagram__item">' +
+          '<span class="nf-diagram__num" aria-hidden="true">' +
+          (idx + 1) +
+          "</span>" +
+          '<div class="nf-diagram__content">' +
+          (label ? "<strong>" + formatInlineNF(label) + "</strong>" : "") +
+          (text ? "<p>" + formatInlineNF(text) + "</p>" : "") +
+          "</div></div>"
+        );
+      })
+      .join("");
+    return (
+      '<figure class="nf-diagram nf-diagram--' +
+      escapeHtml(layout) +
+      '">' +
+      (b.title ? '<figcaption class="nf-diagram__title">' + escapeHtml(b.title) + "</figcaption>" : "") +
+      '<div class="nf-diagram__grid">' +
+      items +
+      "</div>" +
+      (b.caption ? '<p class="nf-diagram__caption">' + escapeHtml(b.caption) + "</p>" : "") +
+      "</figure>"
+    );
+  }
+
+  function renderNFSpread(b) {
+    var layout = b.layout || "hero-right";
+    var hero = b.hero || {};
+    var heroSrc = hero.src ? illPath(hero.src) : "";
+    var heroHtml = heroSrc
+      ? '<figure class="nf-spread__hero story-image" role="button" tabindex="0" aria-label="' +
+        nfT("Збільшити", "Enlarge") +
+        '">' +
+        '<img src="' +
+        heroSrc +
+        '" alt="' +
+        escapeHtml(hero.alt || "") +
+        '" loading="lazy">' +
+        (hero.caption ? "<figcaption>" + escapeHtml(hero.caption) + "</figcaption>" : "") +
+        "</figure>"
+      : "";
+    var callouts = (b.callouts || [])
+      .map(function (c) {
+        return (
+          '<li class="nf-spread__callout">' +
+          '<span class="nf-spread__callout-num" aria-hidden="true">' +
+          escapeHtml(String(c.num || "")) +
+          "</span>" +
+          "<span>" +
+          formatInlineNF(c.text || "") +
+          "</span></li>"
+        );
+      })
+      .join("");
+    var supporting = (b.supporting || [])
+      .map(function (s) {
+        if (!s.src) return "";
+        return (
+          '<figure class="nf-spread__support">' +
+          '<img src="' +
+          illPath(s.src) +
+          '" alt="' +
+          escapeHtml(s.alt || "") +
+          '" loading="lazy">' +
+          (s.caption ? "<figcaption>" + escapeHtml(s.caption) + "</figcaption>" : "") +
+          "</figure>"
+        );
+      })
+      .join("");
+    return (
+      '<section class="nf-spread nf-spread--' +
+      escapeHtml(layout) +
+      '">' +
+      '<div class="nf-spread__text">' +
+      (b.kicker ? '<p class="nf-spread__kicker">' + escapeHtml(b.kicker) + "</p>" : "") +
+      (b.title ? '<h2 class="nf-spread__title">' + escapeHtml(b.title) + "</h2>" : "") +
+      (b.lead ? '<p class="nf-spread__lead">' + formatInlineNF(b.lead) + "</p>" : "") +
+      (b.body ? '<div class="nf-spread__body">' + formatInlineNF(b.body) + "</div>" : "") +
+      (callouts ? '<ol class="nf-spread__callouts">' + callouts + "</ol>" : "") +
+      "</div>" +
+      '<div class="nf-spread__media">' +
+      heroHtml +
+      supporting +
+      "</div>" +
+      (b.foot ? '<p class="nf-spread__foot">' + formatInlineNF(b.foot) + "</p>" : "") +
+      "</section>"
+    );
+  }
+
+  function renderNFContent(blocks) {
+    return (blocks || [])
+      .map(function (b) {
+        if (b.type === "text") {
+          return '<div class="nf-text"><p>' + formatInlineNF(b.text) + "</p></div>";
+        }
+        if (b.type === "ul" || b.type === "list") {
+          var listItems = (b.items || [])
+            .map(function (it) {
+              return "<li>" + formatInlineNF(it) + "</li>";
+            })
+            .join("");
+          return '<ul class="nf-ul">' + listItems + "</ul>";
+        }
+        if (b.type === "h2") {
+          return "<h2 class=\"nf-h2\">" + escapeHtml(b.text) + "</h2>";
+        }
+        if (b.type === "image") {
+          var src = illPath(b.src);
+          return (
+            '<figure class="story-image" role="button" tabindex="0" aria-label="' +
+            nfT("Збільшити", "Enlarge") +
+            '">' +
+            '<img src="' + src + '" alt="' + escapeHtml(b.alt || "") + '" loading="lazy">' +
+            (b.caption ? "<figcaption>" + escapeHtml(b.caption) + "</figcaption>" : "") +
+            "</figure>"
+          );
+        }
+        if (b.type === "code" || b.type === "terminal") {
+          return renderNFCodeBlock(b);
+        }
+        if (b.type === "nanowindow") {
+          var nwFile = escapeHtml(b.file || "hello.txt");
+          var nwBody = escapeHtml(b.body || nfT("Привіт, nano!", "Hello, nano!"));
+          var nwStatus = escapeHtml(b.status || "New File");
+          var nwMod = b.modified ? '<span class="nf-nano-mod">Modified</span>' : "";
+          return (
+            '<figure class="nf-nano-wrap">' +
+            '<div class="nf-nano" role="img" aria-label="' +
+            nfT("Вигляд вікна редактора nano", "nano editor window") +
+            '">' +
+            '<div class="nf-nano-titlebar"><span class="nf-nano-dots" aria-hidden="true"></span><span class="nf-nano-title">pi@raspberrypi: nano</span></div>' +
+            '<div class="nf-nano-header"><span>GNU nano</span><span class="nf-nano-file">' +
+            nwFile +
+            "</span>" +
+            nwMod +
+            "</div>" +
+            '<div class="nf-nano-body"><span class="nf-nano-text">' +
+            nwBody +
+            '</span><span class="nf-nano-cursor" aria-hidden="true"></span></div>' +
+            '<div class="nf-nano-status">[ ' +
+            nwStatus +
+            " ]</div>" +
+            '<div class="nf-nano-footer">' +
+            (activeNfLang === "en"
+              ? "<div><b>^G</b> Help</div><div><b>^O</b> Write Out</div><div><b>^W</b> Where Is</div><div><b>^K</b> Cut</div>" +
+                "<div><b>^X</b> Exit</div><div><b>^R</b> Read File</div><div><b>^U</b> Paste</div><div><b>^C</b> Location</div>"
+              : "<div><b>^G</b> Довідка</div><div><b>^O</b> Зберегти</div><div><b>^W</b> Пошук</div><div><b>^K</b> Вирізати</div>" +
+                "<div><b>^X</b> Вийти</div><div><b>^R</b> Читати файл</div><div><b>^U</b> Вставити</div><div><b>^C</b> Позиція</div>") +
+            "</div></div>" +
+            (b.caption
+              ? "<figcaption>" + escapeHtml(b.caption) + "</figcaption>"
+              : "") +
+            "</figure>"
+          );
+        }
+        if (b.type === "think") {
+          var opts = (b.options || [])
+            .map(function (o) {
+              return (
+                '<label class="nf-option"><input type="radio" name="think-' +
+                escapeHtml(b.id) +
+                '" value="' +
+                escapeHtml(o.id) +
+                '"> <span>' +
+                escapeHtml(o.text) +
+                "</span></label>"
+              );
+            })
+            .join("");
+          return (
+            '<div class="nf-think" data-think-id="' +
+            escapeHtml(b.id) +
+            '" data-answer="' +
+            escapeHtml(b.answer || "") +
+            '"><div class="nf-rubric">' +
+            nfT("🤔 Як ти думаєш?", "🤔 What do you think?") +
+            "</div><p>" +
+            formatInlineNF(b.question) +
+            '</p><div class="nf-options">' +
+            opts +
+            '</div><p class="nf-hint">' +
+            nfT(
+              "Не поспішай. Відповідь з’явиться трохи нижче.",
+              "Don't rush. The answer will appear below."
+            ) +
+            "</p></div>"
+          );
+        }
+        if (b.type === "reveal") {
+          return (
+            '<div class="nf-reveal" data-reveal-for="' +
+            escapeHtml(b.thinkId || "") +
+            '"><div class="nf-rubric">' +
+            nfT("✅ Відповідь", "✅ Answer") +
+            "</div><p>" +
+            formatInlineNF(b.text) +
+            "</p></div>"
+          );
+        }
+        if (b.type === "try") {
+          var tryBody = b.body ? "<div>" + formatInlineNF(b.body) + "</div>" : "";
+          var tryList = "";
+          if (b.checklist && b.checklist.length) {
+            tryList =
+              '<ul class="nf-checklist">' +
+              b.checklist
+                .map(function (it) {
+                  return (
+                    '<li><span class="nf-check-box" aria-hidden="true">□</span> ' +
+                    formatInlineNF(it) +
+                    "</li>"
+                  );
+                })
+                .join("") +
+              "</ul>";
+          }
+          if (b.footer) {
+            tryBody += "<p class=\"nf-try-footer\">" + formatInlineNF(b.footer) + "</p>";
+          }
+          tryBody +=
+            '<p class="nf-try-nopi"><strong>' +
+            nfT("Немає Pi?", "No Pi?") +
+            "</strong> " +
+            nfT(
+              "Виконай блок <strong>«У класі без Pi»</strong> нижче — це повноцінна заміна.",
+              "Use the <strong>In class without a Pi</strong> block below — it is a full replacement."
+            ) +
+            "</p>";
+          return (
+            '<div class="nf-try"><div class="nf-rubric">' +
+            escapeHtml(b.title || nfT("⌨ Спробуй зараз", "⌨ Try it now")) +
+            "</div>" +
+            tryBody +
+            tryList +
+            "</div>"
+          );
+        }
+        if (b.type === "fact") {
+          var factExtra = "";
+          if (b.items && b.items.length) {
+            factExtra =
+              '<ul class="nf-ul nf-fact-list">' +
+              b.items
+                .map(function (it) {
+                  return "<li>" + formatInlineNF(it) + "</li>";
+                })
+                .join("") +
+              "</ul>";
+          }
+          return (
+            '<aside class="nf-fact"><div class="nf-rubric">💡 ' +
+            escapeHtml(b.title || nfT("Цікавий факт", "Fun fact")) +
+            "</div>" +
+            (b.text ? "<p>" + formatInlineNF(b.text) + "</p>" : "") +
+            factExtra +
+            "</aside>"
+          );
+        }
+        if (b.type === "callout") {
+          return renderNFCallout(b);
+        }
+        if (b.type === "wow") {
+          return renderNFWow(b);
+        }
+        if (b.type === "diagram") {
+          return renderNFDiagram(b);
+        }
+        if (b.type === "spread") {
+          return renderNFSpread(b);
+        }
+        if (b.type === "diary") {
+          var lines = (b.lines || [])
+            .map(function (line) {
+              return (
+                "<p>" +
+                escapeHtml(line) +
+                '</p><div class="nf-lines" aria-hidden="true"><span></span><span></span></div>'
+              );
+            })
+            .join("");
+          return (
+            '<div class="nf-diary"><div class="nf-rubric">' +
+            nfT("📒 Щоденник адміністратора", "📒 Admin Journal") +
+            "</div>" +
+            lines +
+            "</div>"
+          );
+        }
+        if (b.type === "draw") {
+          return (
+            '<div class="nf-draw"><div class="nf-rubric">' +
+            nfT("✏ Намалюй", "✏ Draw") +
+            "</div><p>" +
+            formatInlineNF(b.text) +
+            "</p><div class=\"nf-draw-box\"></div></div>"
+          );
+        }
+        if (b.type === "errors") {
+          var items = (b.items || [])
+            .map(function (it) {
+              if (typeof it === "string") {
+                return "<li>" + formatInlineNF(it) + "</li>";
+              }
+              return (
+                '<li class="nf-error-item"><p class="nf-error-myth"><strong>❌ ' +
+                escapeHtml(it.title || nfT("Помилка", "Mistake")) +
+                "</strong></p><p class=\"nf-error-quote\">«" +
+                formatInlineNF(it.myth || "") +
+                "»</p><p class=\"nf-error-truth\">" +
+                formatInlineNF(it.truth || "") +
+                "</p></li>"
+              );
+            })
+            .join("");
+          return (
+            '<div class="nf-errors"><div class="nf-rubric">' +
+            nfT("⚠ Типові помилки", "⚠ Common mistakes") +
+            '</div><ul class="nf-errors-list">' +
+            items +
+            "</ul></div>"
+          );
+        }
+        if (b.type === "project") {
+          var steps = (b.steps || [])
+            .map(function (st) {
+              return "<li>" + formatInlineNF(st) + "</li>";
+            })
+            .join("");
+          return (
+            '<div class="nf-project"><div class="nf-rubric">' +
+            nfT("🔧 Мініпроєкт", "🔧 Mini project") +
+            "</div><h3>" +
+            escapeHtml(b.title || "") +
+            "</h3><ol>" +
+            steps +
+            "</ol></div>"
+          );
+        }
+        return "";
+      })
+      .join("");
+  }
+
+  function nfCheckPrompt(item) {
+    if (item.type === "tf") return item.text || item.prompt || "";
+    return item.prompt || item.text || "";
+  }
+
+  function nfCheckCorrectLabel(item) {
+    if (item.type === "mc" && item.options) {
+      return item.options[item.answer];
+    }
+    if (item.type === "tf") {
+      return item.answer ? nfT("Правда", "True") : nfT("Неправда", "False");
+    }
+    if (item.type === "match" && item.pairs) {
+      return item.pairs
+        .map(function (pr) {
+          return pr[0] + " → " + pr[1];
+        })
+        .join("; ");
+    }
+    if (item.type === "draw") {
+      return item.answerLabel || nfT("Твій малюнок (перевір за поясненням)", "Your drawing (check against the explanation)");
+    }
+    return item.answer || item.sample || item.answerLabel || "";
+  }
+
+  function renderNFCheckQuestion(item, i) {
+    var n = i + 1;
+    var body = "";
+    var prompt = nfCheckPrompt(item);
+    var badge = item.optional
+      ? '<span class="nf-check-optional">' +
+        nfT("бонус — за бажанням", "bonus — optional") +
+        "</span>"
+      : '<span class="nf-check-core">' +
+        nfT("обов’язково для себе", "required for you") +
+        "</span>";
+
+    if (item.type === "mc") {
+      body =
+        '<p class="nf-check-prompt">' +
+        badge +
+        " " +
+        escapeHtml(prompt) +
+        '</p><ul class="nf-check-opts">' +
+        (item.options || [])
+          .map(function (o) {
+            return '<li><span class="nf-check-bullet" aria-hidden="true">○</span> ' + escapeHtml(o) + "</li>";
+          })
+          .join("") +
+        "</ul>";
+    } else if (item.type === "tf") {
+      body =
+        '<p class="nf-check-prompt">' +
+        badge +
+        " <strong>" +
+        nfT("Правда чи неправда?", "True or false?") +
+        "</strong><br>" +
+        escapeHtml(prompt) +
+        '</p><ul class="nf-check-opts">' +
+        '<li><span class="nf-check-bullet" aria-hidden="true">○</span> ' +
+        nfT("Правда", "True") +
+        "</li>" +
+        '<li><span class="nf-check-bullet" aria-hidden="true">○</span> ' +
+        nfT("Неправда", "False") +
+        "</li>" +
+        "</ul>";
+    } else if (item.type === "fill") {
+      body =
+        '<p class="nf-check-prompt">' +
+        badge +
+        " " +
+        escapeHtml(prompt) +
+        '</p><p class="nf-check-blank">____________________</p>';
+    } else if (item.type === "whatif" || item.type === "error" || item.type === "explain") {
+      body =
+        '<p class="nf-check-prompt">' +
+        badge +
+        " " +
+        escapeHtml(prompt) +
+        '</p><div class="nf-lines"><span></span><span></span><span></span></div>';
+    } else if (item.type === "draw") {
+      body =
+        '<p class="nf-check-prompt">' +
+        badge +
+        " " +
+        escapeHtml(prompt) +
+        '</p><div class="nf-draw-box"></div>';
+    } else if (item.type === "match") {
+      var left = (item.pairs || []).map(function (pr) {
+        return pr[0];
+      });
+      var right = (item.pairs || [])
+        .map(function (pr) {
+          return pr[1];
+        })
+        .slice()
+        .reverse();
+      body =
+        '<p class="nf-check-prompt">' +
+        badge +
+        " " +
+        escapeHtml(prompt || nfT("Поєднай пари:", "Match the pairs:")) +
+        '</p><div class="nf-check-match"><div><p class="nf-muted">' +
+        nfT("Ліва колонка", "Left column") +
+        "</p><ul>" +
+        left
+          .map(function (x) {
+            return "<li>" + escapeHtml(x) + "</li>";
+          })
+          .join("") +
+        '</ul></div><div><p class="nf-muted">' +
+        nfT("Права колонка (перемішана)", "Right column (shuffled)") +
+        "</p><ul>" +
+        right
+          .map(function (x) {
+            return "<li>" + escapeHtml(x) + "</li>";
+          })
+          .join("") +
+        "</ul></div></div>";
+    } else {
+      body =
+        "<p class=\"nf-check-prompt\">" +
+        escapeHtml(prompt) +
+        '</p><div class="nf-lines"><span></span><span></span></div>';
+    }
+
+    return (
+      '<div class="nf-check-item"><span class="nf-check-num">' +
+      n +
+      ".</span><div>" +
+      body +
+      "</div></div>"
+    );
+  }
+
+  function renderNFCheckHint(item, i) {
+    var hint = item.hint || nfT("Пригадай головну ідею цього розділу.", "Remember the main idea of this chapter.");
+    return (
+      '<div class="nf-check-hint-item"><span class="nf-check-num">' +
+      (i + 1) +
+      ".</span><p>" +
+      escapeHtml(hint) +
+      "</p></div>"
+    );
+  }
+
+  function renderNFCheckAnswer(item, i) {
+    var label = nfCheckCorrectLabel(item);
+    var why = item.explanation || item.sample || "";
+    var mark = item.type === "tf" && item.answer === false ? "❌" : "✅";
+    return (
+      '<div class="nf-check-answer-item"><span class="nf-check-num">' +
+      (i + 1) +
+      '.</span><div><p class="nf-check-answer-label">' +
+      nfT("Правильна відповідь:", "Correct answer:") +
+      '</p><p class="nf-check-answer-value">' +
+      mark +
+      " " +
+      escapeHtml(String(label)) +
+      ".</p>" +
+      (why ? "<p class=\"nf-check-why\">" + escapeHtml(why) + "</p>" : "") +
+      "</div></div>"
+    );
+  }
+
+  function renderClassWithoutPi(chapterId, book) {
+    var data = window.SYSADMIN_CLASS_WITHOUT_PI;
+    if (!data || !data.chapters || !data.chapters[chapterId]) return "";
+    var ch = data.chapters[chapterId];
+    var en = book && book.lang === "en";
+    var list =
+      '<ul class="nf-checklist nf-class-checklist">' +
+      (ch.checklist || [])
+        .map(function (it) {
+          return (
+            '<li><span class="nf-check-box" aria-hidden="true">□</span> ' +
+            formatInlineNF(it) +
+            "</li>"
+          );
+        })
+        .join("") +
+      "</ul>";
+    return (
+      '<section class="nf-class-track"><h2>' +
+      (en ? "🏫 In class without a Pi" : "🏫 У класі без Pi") +
+      "</h2>" +
+      '<p class="nf-class-lead">' +
+      (en
+        ? "Track B — full practice without a board. <strong>Lesson outcome:</strong> "
+        : "Трек B — повноцінна практика без плати. <strong>Результат уроку:</strong> ") +
+      formatInlineNF(ch.outcome) +
+      "</p>" +
+      list +
+      '<p class="nf-class-note">' +
+      (en
+        ? "Only one Pi for the whole class? Demo it at the end — kids already learn the ideas from this block."
+        : "Один Pi на весь клас? Покажи демо в кінці — але розуміння діти вже отримають із цього блоку.") +
+      "</p></section>"
+    );
+  }
+
+  function renderNFCheck(check, opts) {
+    opts = opts || {};
+    var forPdf = !!opts.forPdf;
+    var items = check || [];
+    if (!items.length) {
+      return (
+        '<p class="nf-muted">' +
+        nfT(
+          "У цьому розділі перевірочних питань немає.",
+          "This chapter has no check questions."
+        ) +
+        "</p>"
+      );
+    }
+    var coreCount = items.filter(function (x) {
+      return !x.optional;
+    }).length;
+    var bonusCount = items.length - coreCount;
+    var lead;
+    if (activeNfLang === "en") {
+      lead =
+        "This is not a test. First " +
+        coreCount +
+        " question(s) — required for you";
+      if (bonusCount) {
+        lead += "; plus " + bonusCount + " bonus if you have energy";
+      }
+      lead += forPdf
+        ? ". Answer yourself first — hints below, answer key on the next page."
+        : ". Hints are open below; answers when you have tried.";
+    } else {
+      lead =
+        "Це не іспит. Спочатку " +
+        coreCount +
+        " питання — обов’язково для себе";
+      if (bonusCount) {
+        lead += "; ще " + bonusCount + " — бонус, якщо є сили";
+      }
+      if (forPdf) {
+        lead += ". Спочатку відповідай сам — підказки нижче, ключ відповідей на наступній сторінці.";
+      } else {
+        lead += ". Підказки відкриті нижче; відповіді — коли сам спробуєш.";
+      }
+    }
+    var questions =
+      '<p class="nf-check-lead">' +
+      lead +
+      "</p>" +
+      '<div class="nf-check-list">' +
+      items.map(renderNFCheckQuestion).join("") +
+      "</div>";
+    var hintsBlock =
+      '<div class="nf-check-hints-list">' +
+      items.map(renderNFCheckHint).join("") +
+      "</div>";
+    var answersBlock =
+      '<div class="nf-check-answers-list">' +
+      items.map(renderNFCheckAnswer).join("") +
+      "</div>";
+    if (forPdf) {
+      return (
+        questions +
+        '<section class="nf-check-section nf-check-hints nf-check-hints--pdf">' +
+        "<h3>💡 " + nfT("Підказки", "Hints") + "</h3>" +
+        '<p class="nf-muted">' +
+        nfT(
+          "Підказки лише спрямовують — вони не розкривають повну відповідь.",
+          "Hints only nudge you — they do not give the full answer."
+        ) +
+        "</p>" +
+        hintsBlock +
+        "</section>" +
+        '<section class="nf-check-section nf-check-answers nf-check-answers--pdf">' +
+        "<h3>✅ " + nfT("Відповіді", "Answers") + "</h3>" +
+        '<p class="nf-muted nf-check-answers-note">' +
+        nfT(
+          "Відкривай цей блок лише після власної спроби. У друкованій версії він на окремій сторінці.",
+          "Open this only after you try yourself. In print, it is on a separate page."
+        ) +
+        "</p>" +
+        answersBlock +
+        "</section>"
+      );
+    }
+    return (
+      questions +
+      '<details class="nf-check-panel nf-check-hints" open>' +
+      "<summary>💡 " + nfT("Підказки", "Hints") + "</summary>" +
+      '<p class="nf-muted">' +
+        nfT(
+          "Підказки лише спрямовують — вони не розкривають повну відповідь.",
+          "Hints only nudge you — they do not give the full answer."
+        ) +
+        "</p>" +
+      hintsBlock +
+      "</details>" +
+      '<details class="nf-check-panel nf-check-answers">' +
+      "<summary>✅ " + nfT("Відповіді", "Answers") + "</summary>" +
+      '<p class="nf-muted">' +
+      nfT("Відкривай лише після власної спроби.", "Open only after you try yourself.") +
+      "</p>" +
+      answersBlock +
+      "</details>"
+    );
+  }
+
+  function paintNonfictionChapter(root, book, chapter) {
+    setActiveNfBook(book);
+    var en = book.lang === "en";
     document.title =
-      "Rozdział " + chapter.id + " · " + chapter.title + " · " + book.title;
+      (en ? "Chapter " : "Розділ ") +
+      chapter.id +
+      " · " +
+      chapter.title +
+      " · " +
+      book.title;
     document.documentElement.style.setProperty("--book-color", book.color);
 
     var nextHref =
@@ -935,24 +2030,182 @@
         ? "chapter.html?book=" + book.id + "&id=" + chapter.next
         : "book.html?id=" + book.id;
     var nextLabel =
-      chapter.next != null ? "Następny rozdział →" : "Wróć do spisu treści";
+      chapter.next != null
+        ? en
+          ? "Next chapter →"
+          : "Наступний розділ →"
+        : en
+          ? "Back to contents"
+          : "До змісту книги";
+
+    var learn = (chapter.learn || [])
+      .map(function (x) {
+        return "<li>" + escapeHtml(x) + "</li>";
+      })
+      .join("");
+
+    var cmds =
+      (chapter.commands || []).length === 0
+        ? en
+          ? '<p class="nf-muted">No new terminal commands in this chapter.</p>'
+          : '<p class="nf-muted">У цьому розділі нових команд термінала немає.</p>'
+        : '<table class="nf-table"><thead><tr><th>' +
+          (en ? "Command" : "Команда") +
+          "</th><th>" +
+          (en ? "What it does" : "Що робить") +
+          "</th></tr></thead><tbody>" +
+          chapter.commands
+            .map(function (c) {
+              return (
+                "<tr><td><code>" +
+                escapeHtml(c.cmd) +
+                "</code></td><td>" +
+                escapeHtml(c.does) +
+                "</td></tr>"
+              );
+            })
+            .join("") +
+          "</tbody></table>";
+
+    var gloss = (chapter.glossary || [])
+      .map(function (g) {
+        return (
+          '<div class="nf-gloss-item"><strong>' +
+          escapeHtml(g.term) +
+          "</strong><p>" +
+          escapeHtml(g.def) +
+          "</p></div>"
+        );
+      })
+      .join("");
+
+    var rem = (chapter.remember || [])
+      .map(function (r) {
+        return "<li>" + escapeHtml(r) + "</li>";
+      })
+      .join("");
 
     root.innerHTML =
       '<div class="lesson-nav">' +
       '<a class="back-link" href="book.html?id=' +
       book.id +
-      '">← Spis treści</a>' +
+      '">' +
+      (en ? "← Contents" : "← Зміст") +
+      "</a>" +
       '<div class="lesson-nav__right">' +
       '<button type="button" class="btn btn--ghost btn--pdf" data-export-pdf="' +
       book.id +
       '">📄 PDF</button>' +
-      '<span style="font-family:var(--font-ui);font-weight:800;color:var(--ink-soft)">Rozdział ' +
+      "<span>" +
+      (en ? "Chapter " : "Розділ ") +
+      chapter.id +
+      " / " +
+      book.chaptersCount +
+      "</span></div></div>" +
+      '<header class="chapter-open nf-open">' +
+      '<p class="chapter-open__label">' +
+      (en ? "Part " : "Частина ") +
+      chapter.part +
+      " · " +
+      escapeHtml(chapter.partTitle || "") +
+      "</p><h1>" +
+      escapeHtml(chapter.title) +
+      "</h1></header>" +
+      '<section class="nf-learn"><h2>📌 ' +
+      (en ? "What you'll learn" : "Що ти дізнаєшся") +
+      "</h2><ul>" +
+      learn +
+      "</ul></section>" +
+      '<section class="nf-body">' +
+      renderNFContent(chapter.content) +
+      renderClassWithoutPi(chapter.id, book) +
+      "</section>" +
+      '<section class="nf-end"><h2>📌 ' +
+      (en ? "Remember" : "Запам’ятай") +
+      "</h2><ul>" +
+      rem +
+      "</ul></section>" +
+      '<section class="nf-end"><h2>💻 ' +
+      (en ? "Commands you learned today" : "Команди, які ти сьогодні вивчив") +
+      "</h2>" +
+      cmds +
+      "</section>" +
+      '<section class="nf-end"><h2>📖 ' +
+      (en ? "New words" : "Нові слова") +
+      '</h2><div class="nf-gloss">' +
+      gloss +
+      "</div></section>" +
+      '<section class="nf-end"><h2>✅ ' +
+      (en ? "Check yourself" : "Перевір себе") +
+      "</h2>" +
+      renderNFCheck(chapter.check) +
+      "</section>" +
+      '<div class="summary__actions" style="margin-top:2rem">' +
+      '<a class="btn btn--coral btn--wide" href="' +
+      nextHref +
+      '" data-next-chapter>' +
+      nextLabel +
+      '</a><a class="btn btn--ghost btn--wide" href="book.html?id=' +
+      book.id +
+      '">' +
+      (en ? "Book contents" : "Зміст книги") +
+      "</a>" +
+      '<button type="button" class="btn btn--ghost btn--wide" data-export-pdf="' +
+      book.id +
+      '">' +
+      (en ? "📄 Save book as PDF (A4)" : "📄 Зберегти книгу як PDF (A4)") +
+      "</button></div>";
+  }
+
+  function paintChapter(root, book, chapter) {
+    setActiveNfBook(book);
+    if (book.format === "nonfiction") {
+      paintNonfictionChapter(root, book, chapter);
+      return;
+    }
+    var uk = book.lang === "uk";
+    document.title =
+      (uk ? "Розділ " : "Rozdział ") +
+      chapter.id +
+      " · " +
+      chapter.title +
+      " · " +
+      book.title;
+    document.documentElement.style.setProperty("--book-color", book.color);
+
+    var nextHref =
+      chapter.next != null
+        ? "chapter.html?book=" + book.id + "&id=" + chapter.next
+        : "book.html?id=" + book.id;
+    var nextLabel =
+      chapter.next != null
+        ? uk
+          ? "Наступний розділ →"
+          : "Następny rozdział →"
+        : uk
+          ? "Повернутися до змісту"
+          : "Wróć do spisu treści";
+
+    root.innerHTML =
+      '<div class="lesson-nav">' +
+      '<a class="back-link" href="book.html?id=' +
+      book.id +
+      '">' +
+      (uk ? "← Зміст" : "← Spis treści") +
+      "</a>" +
+      '<div class="lesson-nav__right">' +
+      '<button type="button" class="btn btn--ghost btn--pdf" data-export-pdf="' +
+      book.id +
+      '">📄 PDF</button>' +
+      '<span style="font-family:var(--font-ui);font-weight:800;color:var(--ink-soft)">' +
+      (uk ? "Розділ " : "Rozdział ") +
       chapter.id +
       " / " +
       book.chaptersCount +
       "</span></div></div>" +
       '<header class="chapter-open">' +
-      '<p class="chapter-open__label">Rozdział ' +
+      '<p class="chapter-open__label">' +
+      (uk ? "Розділ " : "Rozdział ") +
       chapter.id +
       " · " +
       escapeHtml(chapter.subtitle || "") +
@@ -964,25 +2217,35 @@
       '<section class="story">' +
       renderStory(chapter.story) +
       "</section>" +
-      '<section class="words"><h2 class="section-break">Nowe słowa</h2>' +
-      renderWords(chapter.words) +
+      '<section class="words"><h2 class="section-break">' +
+      (uk ? "Запам’ятай" : "Nowe słowa") +
+      "</h2>" +
+      renderWords(chapter.words, uk) +
       "</section>" +
       '<aside class="fact"><img src="' +
       iconPath("lightbulb") +
-      '" alt=""><div><h3>Ciekawostka</h3><p>' +
+      '" alt=""><div><h3>' +
+      (uk ? "Цікавий факт" : "Ciekawostka") +
+      "</h3><p>" +
       escapeHtml(chapter.fact) +
       "</p></div></aside>" +
-      '<section class="questions"><h2 class="section-break">Pytania do myślenia</h2>' +
+      '<section class="questions"><h2 class="section-break">' +
+      (uk ? "Перевір себе" : "Pytania do myślenia") +
+      "</h2>" +
       renderQuestions(chapter.questions) +
       "</section>" +
-      '<section class="tasks"><h2 class="section-break">Zadania</h2>' +
+      '<section class="tasks"><h2 class="section-break">' +
+      (uk ? "Практика і завдання" : "Zadania") +
+      "</h2>" +
       chapter.tasks
         .map(function (t, i) {
           return renderTask(t, i);
         })
         .join("") +
       "</section>" +
-      '<section class="summary"><h2>Czego się nauczyłeś?</h2><ul>' +
+      '<section class="summary"><h2>' +
+      (uk ? "Чого ти навчився?" : "Czego się nauczyłeś?") +
+      "</h2><ul>" +
       chapter.summary
         .map(function (s) {
           return "<li>" + escapeHtml(s) + "</li>";
@@ -995,10 +2258,14 @@
       nextLabel +
       '</a><a class="btn btn--ghost btn--wide" href="book.html?id=' +
       book.id +
-      '">Spis treści książki</a>' +
+      '">' +
+      (uk ? "Зміст книги" : "Spis treści książki") +
+      "</a>" +
       '<button type="button" class="btn btn--ghost btn--wide" data-export-pdf="' +
       book.id +
-      '">📄 Zapisz książkę jako PDF (A4)</button></div></section>';
+      '">' +
+      (uk ? "📄 Зберегти книгу як PDF (A4)" : "📄 Zapisz książkę jako PDF (A4)") +
+      "</button></div></section>";
   }
 
   function absoluteAssetUrl(relPath) {
@@ -1050,6 +2317,330 @@
       .join("");
   }
 
+  function pdfNonfictionHtml(chapter, bookId) {
+    var book =
+      window["BOOK_" + String(bookId || "").toUpperCase()] ||
+      window.BOOK_SYSADMIN_EN ||
+      window.BOOK_SYSADMIN ||
+      null;
+    var html = "";
+    var heroUsed = false;
+    if (chapter.learn && chapter.learn.length) {
+      html +=
+        "<h2>" +
+        nfT("Що ти дізнаєшся", "What you'll learn") +
+        "</h2><ul>" +
+        chapter.learn
+          .map(function (x) {
+            return "<li>" + escapeHtml(x) + "</li>";
+          })
+          .join("") +
+        "</ul>";
+    }
+    html += (chapter.content || [])
+      .map(function (b) {
+        if (b.type === "image") {
+          var heroClass = !heroUsed ? " book-pdf__hero" : "";
+          heroUsed = true;
+          return (
+            '<figure class="' +
+            heroClass.trim() +
+            '"><img src="' +
+            absoluteAssetUrl(illPath(b.src, bookId)) +
+            '" alt="' +
+            escapeHtml(b.alt || "") +
+            '">' +
+            (b.caption
+              ? "<figcaption>" + escapeHtml(b.caption) + "</figcaption>"
+              : "") +
+            "</figure>"
+          );
+        }
+        if (b.type === "text") {
+          return "<p>" + formatInlineNF(b.text) + "</p>";
+        }
+        if (b.type === "reveal") {
+          return (
+            '<aside class="nf-print-block nf-print-block--reveal"><p class="nf-print-label">' +
+            nfT("Відповідь", "Answer") +
+            "</p><p>" +
+            formatInlineNF(b.text) +
+            "</p></aside>"
+          );
+        }
+        if (b.type === "ul" || b.type === "list") {
+          return (
+            "<ul>" +
+            (b.items || [])
+              .map(function (it) {
+                return "<li>" + formatInlineNF(it) + "</li>";
+              })
+              .join("") +
+            "</ul>"
+          );
+        }
+        if (b.type === "h2") return "<h2>" + escapeHtml(b.text) + "</h2>";
+        if (b.type === "code" || b.type === "terminal") {
+          return (
+            '<pre class="nf-code"><code>' + formatNFCode(b.text) + "</code></pre>"
+          );
+        }
+        if (b.type === "nanowindow") {
+          return (
+            '<aside class="nf-print-block"><p class="nf-print-label">' +
+            nfT("Вікно nano", "nano window") +
+            "</p><p><code>" +
+            escapeHtml(b.file || "hello.txt") +
+            "</code> — " +
+            escapeHtml(b.body || "") +
+            "</p></aside>"
+          );
+        }
+        if (b.type === "think") {
+          return (
+            '<aside class="nf-print-block nf-print-block--think"><p class="nf-print-label">' +
+            nfT("Як ти думаєш?", "What do you think?") +
+            "</p><p>" +
+            formatInlineNF(b.question) +
+            "</p><ul>" +
+            (b.options || [])
+              .map(function (o) {
+                return "<li>" + escapeHtml(o.text) + "</li>";
+              })
+              .join("") +
+            "</ul></aside>"
+          );
+        }
+        if (b.type === "try") {
+          return (
+            '<aside class="nf-print-block nf-print-block--try"><p class="nf-print-label">' +
+            escapeHtml(b.title || nfT("Спробуй зараз", "Try it now")) +
+            "</p>" +
+            (b.body ? "<p>" + formatInlineNF(b.body) + "</p>" : "") +
+            (b.checklist && b.checklist.length
+              ? "<ul>" +
+                b.checklist
+                  .map(function (it) {
+                    return "<li>□ " + formatInlineNF(it) + "</li>";
+                  })
+                  .join("") +
+                "</ul>"
+              : "") +
+            (b.footer ? "<p>" + formatInlineNF(b.footer) + "</p>" : "") +
+            "</aside>"
+          );
+        }
+        if (b.type === "fact") {
+          return (
+            '<aside class="nf-print-block nf-print-block--fact"><p class="nf-print-label">' +
+            escapeHtml(b.title || nfT("Цікавий факт", "Fun fact")) +
+            "</p>" +
+            (b.text ? "<p>" + formatInlineNF(b.text) + "</p>" : "") +
+            (b.items && b.items.length
+              ? "<ul>" +
+                b.items
+                  .map(function (it) {
+                    return "<li>" + formatInlineNF(it) + "</li>";
+                  })
+                  .join("") +
+                "</ul>"
+              : "") +
+            "</aside>"
+          );
+        }
+        if (b.type === "callout") {
+          return (
+            '<aside class="nf-print-block nf-print-block--callout"><p class="nf-print-label">' +
+            escapeHtml(b.title || nfT("Підказка", "Tip")) +
+            "</p><p>" +
+            formatInlineNF(b.text || "") +
+            "</p></aside>"
+          );
+        }
+        if (b.type === "wow") {
+          return (
+            '<aside class="nf-print-block nf-print-block--wow"><p class="nf-print-label">' +
+            escapeHtml(b.title || nfT("✨ Це дивовижно!", "✨ Wow!")) +
+            "</p><p>" +
+            formatInlineNF(b.text || "") +
+            "</p></aside>"
+          );
+        }
+        if (b.type === "diagram") {
+          return (
+            '<aside class="nf-print-block nf-print-block--diagram"><p class="nf-print-label">' +
+            escapeHtml(b.title || nfT("Схема", "Diagram")) +
+            "</p><ul>" +
+            (b.items || [])
+              .map(function (it) {
+                var label = typeof it === "string" ? it : it.label || "";
+                var text = typeof it === "string" ? "" : it.text || "";
+                return (
+                  "<li><strong>" +
+                  formatInlineNF(label) +
+                  "</strong> " +
+                  formatInlineNF(text) +
+                  "</li>"
+                );
+              })
+              .join("") +
+            "</ul>" +
+            (b.caption ? "<p><em>" + escapeHtml(b.caption) + "</em></p>" : "") +
+            "</aside>"
+          );
+        }
+        if (b.type === "spread") {
+          var spreadHero = b.hero || {};
+          var spreadImg = spreadHero.src
+            ? '<figure class="book-pdf__hero"><img src="' +
+              absoluteAssetUrl(illPath(spreadHero.src, bookId)) +
+              '" alt="' +
+              escapeHtml(spreadHero.alt || "") +
+              '">' +
+              (spreadHero.caption
+                ? "<figcaption>" + escapeHtml(spreadHero.caption) + "</figcaption>"
+                : "") +
+              "</figure>"
+            : "";
+          return (
+            (b.title ? "<h2>" + escapeHtml(b.title) + "</h2>" : "") +
+            (b.lead ? "<p>" + formatInlineNF(b.lead) + "</p>" : "") +
+            (b.body ? "<p>" + formatInlineNF(b.body) + "</p>" : "") +
+            spreadImg +
+            (b.callouts && b.callouts.length
+              ? "<ol>" +
+                b.callouts
+                  .map(function (c) {
+                    return "<li>" + formatInlineNF(c.text || "") + "</li>";
+                  })
+                  .join("") +
+                "</ol>"
+              : "")
+          );
+        }
+        if (b.type === "diary") {
+          return (
+            '<aside class="nf-print-block nf-print-block--diary"><p class="nf-print-label">' +
+            nfT("Щоденник адміністратора", "Admin Journal") +
+            "</p><ul>" +
+            (b.lines || [])
+              .map(function (l) {
+                return "<li>" + escapeHtml(l) + "</li>";
+              })
+              .join("") +
+            "</ul></aside>"
+          );
+        }
+        if (b.type === "draw") {
+          return (
+            '<aside class="nf-print-block nf-print-block--draw"><p class="nf-print-label">' +
+            nfT("Намалюй", "Draw") +
+            "</p><p>" +
+            formatInlineNF(b.text) +
+            "</p></aside>"
+          );
+        }
+        if (b.type === "errors") {
+          return (
+            '<aside class="nf-print-block nf-print-block--errors"><p class="nf-print-label">' +
+            nfT("Типові помилки", "Common mistakes") +
+            "</p><ul>" +
+            (b.items || [])
+              .map(function (it) {
+                if (typeof it === "string") {
+                  return "<li>" + formatInlineNF(it) + "</li>";
+                }
+                return (
+                  "<li><strong>" +
+                  escapeHtml(it.title || nfT("Помилка", "Mistake")) +
+                  "</strong> «" +
+                  formatInlineNF(it.myth || "") +
+                  "» — " +
+                  formatInlineNF(it.truth || "") +
+                  "</li>"
+                );
+              })
+              .join("") +
+            "</ul></aside>"
+          );
+        }
+        if (b.type === "project") {
+          return (
+            '<aside class="nf-print-block"><p class="nf-print-label">' +
+            nfT("Мініпроєкт", "Mini project") +
+            "</p><p><strong>" +
+            escapeHtml(b.title || "") +
+            "</strong></p><ol>" +
+            (b.steps || [])
+              .map(function (st) {
+                return "<li>" + formatInlineNF(st) + "</li>";
+              })
+              .join("") +
+            "</ol></aside>"
+          );
+        }
+        return "";
+      })
+      .join("");
+    if (chapter.remember && chapter.remember.length) {
+      html +=
+        "<h2>" +
+        nfT("Запам’ятай", "Remember") +
+        "</h2><ul>" +
+        chapter.remember
+          .map(function (r) {
+            return "<li>" + escapeHtml(r) + "</li>";
+          })
+          .join("") +
+        "</ul>";
+    }
+    if (chapter.commands && chapter.commands.length) {
+      html +=
+        "<h2>" +
+        nfT("Команди", "Commands") +
+        "</h2><ul>" +
+        chapter.commands
+          .map(function (c) {
+            return (
+              "<li><code>" +
+              escapeHtml(c.cmd) +
+              "</code> — " +
+              escapeHtml(c.does) +
+              "</li>"
+            );
+          })
+          .join("") +
+        "</ul>";
+    }
+    if (chapter.glossary && chapter.glossary.length) {
+      html +=
+        "<h2>" +
+        nfT("Нові слова", "New words") +
+        "</h2><ul>" +
+        chapter.glossary
+          .map(function (g) {
+            return (
+              "<li><strong>" +
+              escapeHtml(g.term) +
+              "</strong> — " +
+              escapeHtml(g.def) +
+              "</li>"
+            );
+          })
+          .join("") +
+        "</ul>";
+    }
+    if (chapter.check && chapter.check.length) {
+      html +=
+        "<h2>" +
+        nfT("Перевір себе", "Check yourself") +
+        "</h2>" +
+        renderNFCheck(chapter.check, { forPdf: true });
+    }
+    html += renderClassWithoutPi(chapter.id, book);
+    return html;
+  }
+
   function pdfWordsHtml(words) {
     return (words || [])
       .map(function (w) {
@@ -1086,80 +2677,342 @@
     );
   }
 
+  function pdfPartArtSrc(partId) {
+    var map = {
+      1: "part-01-pi",
+      2: "part-02-linux",
+      3: "part-03-admin",
+      4: "part-04-net",
+      5: "part-05-mc",
+      6: "part-06-next",
+    };
+    var key = map[partId];
+    return key ? absoluteAssetUrl(illPath(key)) : "";
+  }
+
   function buildBookPdfDocument(book, chapters) {
-    var color = book.color || "#1D6FD8";
-    var toc =
-      "<ol>" +
-      book.chapters
-        .map(function (ch) {
+    var color = book.color || "#0F766E";
+    var base = new URL("./", window.location.href).href;
+    var enPdf = book.lang === "en";
+    var ukPdf = book.lang === "uk";
+    var isSysadmin = isSysadminBook(book.id);
+    var langAttr = enPdf ? "en" : ukPdf ? "uk" : "pl";
+
+    var coverFront = isSysadmin
+      ? absoluteAssetUrl("assets/covers/cover-front-mission-admin.png")
+      : "";
+    var coverBack = isSysadmin
+      ? absoluteAssetUrl("assets/covers/cover-back-mission-admin.png")
+      : "";
+
+    var parts = book.parts || [];
+    var tocHtml = "";
+    if (parts.length) {
+      tocHtml = parts
+        .map(function (part) {
+          var items = (book.chapters || [])
+            .filter(function (ch) {
+              return part.chapters && part.chapters.indexOf(ch.id) !== -1;
+            })
+            .map(function (ch) {
+              return (
+                "<li>" +
+                ch.id +
+                ". " +
+                escapeHtml(ch.title) +
+                "</li>"
+              );
+            })
+            .join("");
           return (
-            "<li>Rozdział " +
-            ch.id +
-            " — " +
-            escapeHtml(ch.title) +
-            "</li>"
+            '<div class="book-pdf__toc-part"><h3>' +
+            (enPdf ? "Part " : ukPdf ? "Частина " : "Część ") +
+            part.id +
+            ". " +
+            escapeHtml(part.title) +
+            "</h3><ol>" +
+            items +
+            "</ol></div>"
           );
         })
-        .join("") +
-      "</ol>";
+        .join("");
+    } else {
+      tocHtml =
+        "<ol>" +
+        (book.chapters || [])
+          .map(function (ch) {
+            return (
+              "<li>" +
+              (enPdf ? "Chapter " : ukPdf ? "Розділ " : "Rozdział ") +
+              ch.id +
+              " — " +
+              escapeHtml(ch.title) +
+              "</li>"
+            );
+          })
+          .join("") +
+        "</ol>";
+    }
 
-    var chaptersHtml = chapters
-      .map(function (ch, idx) {
+    var chapterById = {};
+    chapters.forEach(function (ch) {
+      chapterById[ch.id] = ch;
+    });
+
+    var bodyHtml = "";
+    var emitted = {};
+
+    function chapterArticle(ch) {
+      if (!ch || emitted[ch.id]) return "";
+      emitted[ch.id] = true;
+      if (book.format === "nonfiction") {
         return (
-          '<article class="book-pdf__chapter" style="' +
-          (idx === 0 ? "" : "") +
-          '">' +
-          '<p class="book-pdf__ch-label">Rozdział ' +
+          '<article class="book-pdf__chapter">' +
+          '<p class="book-pdf__ch-label">' +
+          (enPdf ? "Part " : "Частина ") +
+          (ch.part || "") +
+          (enPdf ? " · Chapter " : " · Розділ ") +
           ch.id +
-          " z " +
+          " / " +
           book.chaptersCount +
           "</p>" +
           "<h1>" +
           escapeHtml(ch.title) +
           "</h1>" +
-          (ch.subtitle
-            ? '<p class="book-pdf__ch-sub">' + escapeHtml(ch.subtitle) + "</p>"
-            : "") +
-          (ch.intro
-            ? '<p class="book-pdf__intro">' + escapeHtml(ch.intro) + "</p>"
-            : "") +
           '<div class="book-pdf__story">' +
-          pdfStoryHtml(ch.story) +
+          pdfNonfictionHtml(ch, book.id) +
           "</div>" +
-          '<section class="book-pdf__section">' +
-          "<h2>Nowe słowa</h2>" +
-          '<div class="book-pdf__words">' +
-          pdfWordsHtml(ch.words) +
-          "</div></section>" +
-          '<section class="book-pdf__section">' +
-          '<div class="book-pdf__fact"><h3>Ciekawostka</h3><p>' +
-          escapeHtml(ch.fact || "") +
-          "</p></div>" +
-          "<h2>Pytania do myślenia</h2>" +
-          '<div class="book-pdf__questions">' +
-          pdfQuestionsHtml(ch.questions) +
-          "</div></section>" +
-          '<section class="book-pdf__section book-pdf__summary">' +
-          "<h2>Czego się nauczyłeś?</h2><ul>" +
-          (ch.summary || [])
-            .map(function (s) {
-              return "<li>" + escapeHtml(s) + "</li>";
-            })
-            .join("") +
-          "</ul></section>" +
-          '<p class="book-pdf__footer">MISJE WIEDZY · ' +
+          '<p class="book-pdf__footer">' +
           escapeHtml(book.title) +
-          " · Rozdział " +
+          (enPdf ? " · Chapter " : " · Розділ ") +
           ch.id +
-          "</p>" +
-          "</article>"
+          "</p></article>"
         );
+      }
+      return (
+        '<article class="book-pdf__chapter">' +
+        '<p class="book-pdf__ch-label">' +
+        (enPdf ? "Chapter " : "Rozdział ") +
+        ch.id +
+        " / " +
+        book.chaptersCount +
+        "</p>" +
+        "<h1>" +
+        escapeHtml(ch.title) +
+        "</h1>" +
+        (ch.subtitle
+          ? '<p class="book-pdf__ch-sub">' + escapeHtml(ch.subtitle) + "</p>"
+          : "") +
+        (ch.intro
+          ? '<p class="book-pdf__intro">' + escapeHtml(ch.intro) + "</p>"
+          : "") +
+        '<div class="book-pdf__story">' +
+        pdfStoryHtml(ch.story) +
+        "</div>" +
+        '<section class="book-pdf__section">' +
+        "<h2>" +
+        (enPdf ? "New words" : "Nowe słowa") +
+        "</h2>" +
+        '<div class="book-pdf__words">' +
+        pdfWordsHtml(ch.words) +
+        "</div></section>" +
+        '<section class="book-pdf__section">' +
+        '<div class="book-pdf__fact"><h3>' +
+        (enPdf ? "Fun fact" : "Ciekawostka") +
+        "</h3><p>" +
+        escapeHtml(ch.fact || "") +
+        "</p></div>" +
+        "<h2>" +
+        (enPdf ? "Think about it" : "Pytania do myślenia") +
+        "</h2>" +
+        '<div class="book-pdf__questions">' +
+        pdfQuestionsHtml(ch.questions) +
+        "</div></section>" +
+        '<section class="book-pdf__section book-pdf__summary">' +
+        "<h2>" +
+        (enPdf ? "What you learned" : "Czego się nauczyłeś?") +
+        "</h2><ul>" +
+        (ch.summary || [])
+          .map(function (s) {
+            return "<li>" + escapeHtml(s) + "</li>";
+          })
+          .join("") +
+        "</ul></section>" +
+        '<p class="book-pdf__footer">' +
+        escapeHtml(book.title) +
+        (enPdf ? " · Chapter " : " · Rozdział ") +
+        ch.id +
+        "</p></article>"
+      );
+    }
+
+    if (parts.length && book.format === "nonfiction") {
+      parts.forEach(function (part) {
+        var art = pdfPartArtSrc(part.id);
+        bodyHtml +=
+          '<section class="book-pdf__part">' +
+          '<p class="book-pdf__part-label">' +
+          (enPdf ? "Part " : "Частина ") +
+          part.id +
+          "</p>" +
+          "<h1>" +
+          escapeHtml(part.title) +
+          "</h1>" +
+          (art
+            ? '<figure><img src="' +
+              art +
+              '" alt="' +
+              escapeHtml(part.title) +
+              '"></figure>'
+            : "") +
+          '<p class="book-pdf__footer">' +
+          escapeHtml(book.title) +
+          "</p></section>";
+        (part.chapters || []).forEach(function (cid) {
+          bodyHtml += chapterArticle(chapterById[cid]);
+        });
+      });
+    } else {
+      chapters.forEach(function (ch) {
+        bodyHtml += chapterArticle(ch);
+      });
+    }
+
+    if (isSysadmin && enPdf) {
+      bodyHtml +=
+        '<article class="book-pdf__backmatter book-pdf__chapter"><h1>Glossary &amp; index</h1><div class="book-pdf__story">' +
+        renderMergedGlossaryHtml(book) +
+        "</div>" +
+        '<p class="book-pdf__footer">' +
+        escapeHtml(book.title) +
+        "</p></article>";
+    } else if (isSysadmin && ukPdf && book.backMatter) {
+      bodyHtml +=
+        '<article class="book-pdf__backmatter book-pdf__chapter"><h1>Словник і покажчик</h1><div class="book-pdf__story"><p>' +
+        escapeHtml((book.backMatter && book.backMatter.glossaryNote) || "") +
+        "</p><p>" +
+        escapeHtml((book.backMatter && book.backMatter.indexNote) || "") +
+        "</p></div>" +
+        '<p class="book-pdf__footer">' +
+        escapeHtml(book.title) +
+        "</p></article>";
+    }
+
+    var fm = book.frontMatter || {};
+    var howList = (fm.howToUse || [])
+      .map(function (x) {
+        return "<li>" + escapeHtml(x.replace(/\*\*/g, "")) + "</li>";
       })
       .join("");
 
-    var base = absoluteAssetUrl("./");
+    var legalHtml = "";
+    if (fm.legalNote || isSysadmin) {
+      legalHtml =
+        '<section class="book-pdf__legal"><h2>' +
+        (enPdf ? "Legal notice" : "Правова нотатка") +
+        "</h2><p>" +
+        escapeHtml(
+          fm.legalNote ||
+            (enPdf
+              ? "Unofficial educational guide. Not affiliated with Mojang Studios, Microsoft, or the Raspberry Pi Foundation."
+              : "Неофіційний навчальний посібник. Не пов’язаний із Mojang Studios, Microsoft чи Raspberry Pi Foundation.")
+        ) +
+        '</p><p class="book-pdf__copyright">' +
+        (enPdf
+          ? "© Mission Admin · MISJE WIEDZY · For personal and classroom use."
+          : "© Місія Адміністратор · MISJE WIEDZY · Для особистого й класного використання.") +
+        "</p>" +
+        '<p class="book-pdf__footer">' +
+        escapeHtml(book.title) +
+        "</p></section>";
+    }
+
+    var frontHtml =
+      '<section class="book-pdf__front"><h2>' +
+      (enPdf ? "How to use this book" : "Як користуватися книгою") +
+      "</h2>" +
+      (fm.preface
+        ? "<p>" + escapeHtml(String(fm.preface).replace(/\*\*/g, "")) + "</p>"
+        : "") +
+      (fm.withAdult
+        ? "<p><strong>" +
+          (enPdf ? "Read together: " : "Разом із дорослим: ") +
+          "</strong>" +
+          escapeHtml(String(fm.withAdult).replace(/\*\*/g, "")) +
+          "</p>"
+        : "") +
+      (howList ? "<ul>" + howList + "</ul>" : "") +
+      '<p class="book-pdf__footer">' +
+      escapeHtml(book.title) +
+      "</p></section>";
+
+    var coverHtml =
+      '<header class="book-pdf__cover" style="color:' +
+      color +
+      '">' +
+      (coverFront
+        ? '<div class="book-pdf__cover-art"><img src="' +
+          coverFront +
+          '" alt="' +
+          escapeHtml(book.title) +
+          '"></div>'
+        : "") +
+      '<div class="book-pdf__cover-text">' +
+      '<p class="book-pdf__series">MISJE WIEDZY</p>' +
+      '<div class="book-pdf__badge">' +
+      (enPdf ? "Book " : ukPdf ? "Книга " : "Książka ") +
+      book.number +
+      (enPdf ? " · EN" : ukPdf ? " · UA" : "") +
+      "</div>" +
+      "<h1>" +
+      escapeHtml(book.title) +
+      "</h1>" +
+      (book.tagline
+        ? '<p class="book-pdf__tagline">' + escapeHtml(book.tagline) + "</p>"
+        : "") +
+      '<p class="book-pdf__sub">' +
+      escapeHtml(book.subtitle || "") +
+      "</p>" +
+      '<p class="book-pdf__meta">' +
+      escapeHtml(book.level || "") +
+      " · " +
+      book.chaptersCount +
+      (enPdf ? " chapters" : ukPdf ? " розділів" : " rozdziałów") +
+      " · ~" +
+      book.readingMinutes +
+      " min</p>" +
+      (book.description
+        ? '<p class="book-pdf__desc">' +
+          escapeHtml(String(book.description).replace(/\*\*/g, "")) +
+          "</p>"
+        : "") +
+      "</div></header>";
+
+    var backHtml = coverBack
+      ? '<section class="book-pdf__back"><div class="book-pdf__back-art"><img src="' +
+        coverBack +
+        '" alt="' +
+        (enPdf ? "Back cover" : "Задня обкладинка") +
+        '"></div></section>'
+      : "";
+
+    var toolbarPrint = enPdf
+      ? "Save / print PDF"
+      : ukPdf
+        ? "Зберегти / друкувати PDF"
+        : "Zapisz / drukuj PDF";
+    var toolbarClose = enPdf ? "Close" : ukPdf ? "Закрити" : "Zamknij";
+    var toolbarHint = enPdf
+      ? "A4 · 12 pt · each chapter starts on a new page · enable Background graphics"
+      : ukPdf
+        ? "A4 · 12 pt · кожен розділ з нової сторінки · увімкни графіку фону"
+        : "A4 · tekst 12 pt · każdy rozdział od nowej strony";
+    var tocTitle = enPdf ? "Contents" : ukPdf ? "Зміст" : "Spis treści";
+
     return (
-      "<!DOCTYPE html><html lang=\"pl\"><head><meta charset=\"UTF-8\">" +
+      "<!DOCTYPE html><html lang=\"" +
+      langAttr +
+      "\"><head><meta charset=\"UTF-8\">" +
       "<title>" +
       escapeHtml(book.title) +
       " · PDF</title>" +
@@ -1172,39 +3025,29 @@
       '">' +
       "</head><body>" +
       '<div class="pdf-toolbar">' +
-      '<button type="button" id="pdf-print">Zapisz / drukuj PDF</button>' +
-      '<button type="button" class="secondary" id="pdf-close">Zamknij</button>' +
-      "<span>A4 · tekst 12 pt · każdy rozdział od nowej strony</span>" +
+      '<button type="button" id="pdf-print">' +
+      toolbarPrint +
+      "</button>" +
+      '<button type="button" class="secondary" id="pdf-close">' +
+      toolbarClose +
+      "</button>" +
+      "<span>" +
+      toolbarHint +
+      "</span>" +
       "</div>" +
       '<div class="book-pdf">' +
-      '<header class="book-pdf__cover" style="color:' +
-      color +
-      '">' +
-      '<p class="book-pdf__series">MISJE WIEDZY</p>' +
-      '<div class="book-pdf__badge">Książka ' +
-      book.number +
-      "</div>" +
-      "<h1>" +
+      coverHtml +
+      legalHtml +
+      frontHtml +
+      '<section class="book-pdf__toc"><h2>' +
+      tocTitle +
+      "</h2>" +
+      tocHtml +
+      '<p class="book-pdf__footer">' +
       escapeHtml(book.title) +
-      "</h1>" +
-      '<p class="book-pdf__sub">' +
-      escapeHtml(book.subtitle || "") +
-      "</p>" +
-      '<p class="book-pdf__meta">' +
-      escapeHtml(book.level || "") +
-      " · " +
-      book.chaptersCount +
-      " rozdziałów · ~" +
-      book.readingMinutes +
-      " min</p>" +
-      '<p class="book-pdf__desc">' +
-      escapeHtml(book.description || "") +
-      "</p>" +
-      "</header>" +
-      '<section class="book-pdf__toc"><h2>Spis treści</h2>' +
-      toc +
-      "</section>" +
-      chaptersHtml +
+      "</p></section>" +
+      bodyHtml +
+      backHtml +
       "</div>" +
       "<script>" +
       "document.getElementById('pdf-print').onclick=function(){window.print()};" +
@@ -1212,7 +3055,7 @@
       "window.addEventListener('load',function(){" +
       "var imgs=[].slice.call(document.images);" +
       "Promise.all(imgs.map(function(img){return img.complete?Promise.resolve():new Promise(function(r){img.onload=img.onerror=r})}))" +
-      ".then(function(){setTimeout(function(){window.print()},400)});" +
+      ".then(function(){setTimeout(function(){window.print()},600)});" +
       "});" +
       "<\/script>" +
       "</body></html>"
@@ -1228,6 +3071,9 @@
     }
 
     loadScript("data/" + bookId + "/book.js")
+      .then(function () {
+        return loadSysadminExtras(bookId);
+      })
       .then(function () {
         var book =
           window["BOOK_" + bookId.toUpperCase()] || window.BOOK_PROGRAMISTA;
@@ -1249,6 +3095,7 @@
         });
       })
       .then(function (book) {
+        setActiveNfBook(book);
         var chapters = [];
         for (var i = 1; i <= book.chaptersCount; i++) {
           var ch = window["CHAPTER_" + String(i).padStart(2, "0")];
