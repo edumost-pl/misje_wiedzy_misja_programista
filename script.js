@@ -2317,6 +2317,27 @@
       .join("");
   }
 
+  /*
+   * ============================================================
+   * PDF HTML: тело nonfiction-главы (только для окна печати)
+   * Классы ниже стилизуются в print-book.css — НЕ в style.css.
+   *
+   * nf-print-learn          → блок «What you'll learn»
+   * book-pdf__hero          → первая (крупная) картинка главы
+   * nf-print-block--wow     → Whoa! / fact
+   * nf-print-block--think   → What do you think?
+   * nf-print-block--reveal  → Answer
+   * nf-print-block--try     → Explore / Try it now
+   * nf-print-block--draw    → Draw (+ .nf-print-draw-box)
+   * nf-print-block--diary   → Admin Journal (+ .nf-print-lines)
+   * nf-print-block--errors  → Common mistakes
+   * nf-print-remember       → Remember
+   * nf-print-commands       → таблица команд
+   * nf-print-words          → New words
+   * nf-print-check          → Check yourself
+   * nf-class-track          → In class without a Pi
+   * ============================================================
+   */
   function pdfNonfictionHtml(chapter, bookId) {
     var book =
       window["BOOK_" + String(bookId || "").toUpperCase()] ||
@@ -2327,7 +2348,7 @@
     var heroUsed = false;
     if (chapter.learn && chapter.learn.length) {
       html +=
-        "<h2>" +
+        '<section class="nf-print-learn"><h2><span class="nf-print-pin" aria-hidden="true">📌</span> ' +
         nfT("Що ти дізнаєшся", "What you'll learn") +
         "</h2><ul>" +
         chapter.learn
@@ -2335,7 +2356,7 @@
             return "<li>" + escapeHtml(x) + "</li>";
           })
           .join("") +
-        "</ul>";
+        "</ul></section>";
     }
     html += (chapter.content || [])
       .map(function (b) {
@@ -2431,9 +2452,16 @@
           );
         }
         if (b.type === "fact") {
+          var factTitle = b.title || nfT("Цікавий факт", "Fun fact");
+          var isWhoa = /whoa/i.test(String(factTitle));
+          var factMod = isWhoa
+            ? "nf-print-block--wow"
+            : "nf-print-block--fact";
           return (
-            '<aside class="nf-print-block nf-print-block--fact"><p class="nf-print-label">' +
-            escapeHtml(b.title || nfT("Цікавий факт", "Fun fact")) +
+            '<aside class="nf-print-block ' +
+            factMod +
+            '"><p class="nf-print-label">' +
+            escapeHtml(factTitle) +
             "</p>" +
             (b.text ? "<p>" + formatInlineNF(b.text) + "</p>" : "") +
             (b.items && b.items.length
@@ -2522,13 +2550,17 @@
           return (
             '<aside class="nf-print-block nf-print-block--diary"><p class="nf-print-label">' +
             nfT("Щоденник адміністратора", "Admin Journal") +
-            "</p><ul>" +
+            '</p><ol class="nf-print-journal">' +
             (b.lines || [])
               .map(function (l) {
-                return "<li>" + escapeHtml(l) + "</li>";
+                return (
+                  '<li><p class="nf-print-prompt">' +
+                  escapeHtml(l) +
+                  '</p><div class="nf-print-lines" aria-hidden="true"><span></span><span></span><span></span></div></li>'
+                );
               })
               .join("") +
-            "</ul></aside>"
+            "</ol></aside>"
           );
         }
         if (b.type === "draw") {
@@ -2537,31 +2569,39 @@
             nfT("Намалюй", "Draw") +
             "</p><p>" +
             formatInlineNF(b.text) +
-            "</p></aside>"
+            '</p><div class="nf-print-draw-box" aria-hidden="true"></div></aside>'
           );
         }
         if (b.type === "errors") {
           return (
             '<aside class="nf-print-block nf-print-block--errors"><p class="nf-print-label">' +
             nfT("Типові помилки", "Common mistakes") +
-            "</p><ul>" +
+            '</p><div class="nf-print-errors">' +
             (b.items || [])
-              .map(function (it) {
+              .map(function (it, idx) {
                 if (typeof it === "string") {
-                  return "<li>" + formatInlineNF(it) + "</li>";
+                  return (
+                    '<div class="nf-print-error"><p class="nf-print-error-title">' +
+                    nfT("Помилка", "Mistake") +
+                    " #" +
+                    (idx + 1) +
+                    '</p><p class="nf-print-error-truth">' +
+                    formatInlineNF(it) +
+                    "</p></div>"
+                  );
                 }
                 return (
-                  "<li><strong>" +
-                  escapeHtml(it.title || nfT("Помилка", "Mistake")) +
-                  "</strong> «" +
+                  '<div class="nf-print-error"><p class="nf-print-error-title">' +
+                  escapeHtml(it.title || nfT("Помилка", "Mistake") + " #" + (idx + 1)) +
+                  '</p><p class="nf-print-error-myth">«' +
                   formatInlineNF(it.myth || "") +
-                  "» — " +
+                  '»</p><p class="nf-print-error-truth">' +
                   formatInlineNF(it.truth || "") +
-                  "</li>"
+                  "</p></div>"
                 );
               })
               .join("") +
-            "</ul></aside>"
+            "</div></aside>"
           );
         }
         if (b.type === "project") {
@@ -2584,7 +2624,7 @@
       .join("");
     if (chapter.remember && chapter.remember.length) {
       html +=
-        "<h2>" +
+        '<section class="nf-print-remember"><h2><span class="nf-print-pin" aria-hidden="true">📌</span> ' +
         nfT("Запам’ятай", "Remember") +
         "</h2><ul>" +
         chapter.remember
@@ -2592,50 +2632,55 @@
             return "<li>" + escapeHtml(r) + "</li>";
           })
           .join("") +
-        "</ul>";
+        "</ul></section>";
     }
     if (chapter.commands && chapter.commands.length) {
       html +=
-        "<h2>" +
-        nfT("Команди", "Commands") +
-        "</h2><ul>" +
+        '<section class="nf-print-commands"><h2>' +
+        nfT("Команди, які ти вивчив сьогодні", "Commands you learned today") +
+        '</h2><table class="nf-print-cmd-table"><thead><tr><th>' +
+        nfT("Команда", "Command") +
+        "</th><th>" +
+        nfT("Що робить", "What it does") +
+        "</th></tr></thead><tbody>" +
         chapter.commands
           .map(function (c) {
             return (
-              "<li><code>" +
+              "<tr><td><code>" +
               escapeHtml(c.cmd) +
-              "</code> — " +
+              "</code></td><td>" +
               escapeHtml(c.does) +
-              "</li>"
+              "</td></tr>"
             );
           })
           .join("") +
-        "</ul>";
+        "</tbody></table></section>";
     }
     if (chapter.glossary && chapter.glossary.length) {
       html +=
-        "<h2>" +
+        '<section class="nf-print-words"><h2>' +
         nfT("Нові слова", "New words") +
-        "</h2><ul>" +
+        '</h2><dl class="nf-print-gloss">' +
         chapter.glossary
           .map(function (g) {
             return (
-              "<li><strong>" +
+              "<dt>" +
               escapeHtml(g.term) +
-              "</strong> — " +
+              "</dt><dd>" +
               escapeHtml(g.def) +
-              "</li>"
+              "</dd>"
             );
           })
           .join("") +
-        "</ul>";
+        "</dl></section>";
     }
     if (chapter.check && chapter.check.length) {
       html +=
-        "<h2>" +
+        '<section class="nf-print-check"><h2>' +
         nfT("Перевір себе", "Check yourself") +
         "</h2>" +
-        renderNFCheck(chapter.check, { forPdf: true });
+        renderNFCheck(chapter.check, { forPdf: true }) +
+        "</section>";
     }
     html += renderClassWithoutPi(chapter.id, book);
     return html;
@@ -2690,6 +2735,26 @@
     return key ? absoluteAssetUrl(illPath(key, bookId)) : "";
   }
 
+  /*
+   * ============================================================
+   * PDF DOCUMENT: собирает полный HTML для window.print()
+   *
+   * Структура (классы → смотри print-book.css):
+   *   .book-pdf / .book-pdf--kdp   → контейнер книги
+   *   .book-pdf__cover            → обложка
+   *   .book-pdf__legal            → legal notice
+   *   .book-pdf__front            → how to use
+   *   .book-pdf__toc              → contents
+   *   .book-pdf__part             → открытие части
+   *   .book-pdf__chapter          → глава
+   *   .book-pdf__story            → поток контента главы
+   *   .book-pdf__footer           → футер + номер страницы
+   *   .book-pdf__back             → задняя обложка
+   *
+   * Стили подключаются как <link href="print-book.css">.
+   * Контент глав приходит из data/<bookId>/chapterXX.js — не меняй тексты здесь.
+   * ============================================================
+   */
   function buildBookPdfDocument(book, chapters) {
     var color = book.color || "#0F766E";
     var base = new URL("./", window.location.href).href;
@@ -3003,10 +3068,10 @@
         : "Zapisz / drukuj PDF";
     var toolbarClose = enPdf ? "Close" : ukPdf ? "Закрити" : "Zamknij";
     var toolbarHint = enPdf
-      ? "A4 · 12 pt · each chapter starts on a new page · enable Background graphics"
+      ? "8.5×11 in · Background graphics ON · Margins Default"
       : ukPdf
-        ? "A4 · 12 pt · кожен розділ з нової сторінки · увімкни графіку фону"
-        : "A4 · tekst 12 pt · każdy rozdział od nowej strony";
+        ? "8.5×11 in · увімкни Background graphics · Margins Default"
+        : "8.5×11 in · Background graphics ON";
     var tocTitle = enPdf ? "Contents" : ukPdf ? "Зміст" : "Spis treści";
 
     return (
@@ -3035,7 +3100,13 @@
       toolbarHint +
       "</span>" +
       "</div>" +
-      '<div class="book-pdf">' +
+      '<div class="book-pdf book-pdf--kdp" style="--book-color:' +
+      color +
+      ';--book-soft:' +
+      (book.colorSoft || '#CCFBF1') +
+      ';--book-accent:' +
+      (book.accent || color) +
+      '">' +
       coverHtml +
       legalHtml +
       frontHtml +
@@ -3062,6 +3133,13 @@
     );
   }
 
+  /*
+   * ============================================================
+   * PDF EXPORT: кнопка «Save book as PDF»
+   * Грузит book.js + главы → buildBookPdfDocument → новое окно → print()
+   * Оформление меняй в print-book.css, не здесь.
+   * ============================================================
+   */
   function exportBookPdf(bookId) {
     var btn = document.querySelector('[data-export-pdf="' + bookId + '"]');
     var prevLabel = btn ? btn.textContent : "";

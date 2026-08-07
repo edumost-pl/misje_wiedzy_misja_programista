@@ -1,17 +1,17 @@
 # Mission Admin — PDF export (Chrome)
 
-Sale-ready A4 PDF for Gumroad / home print. Uses the in-app **Save book as PDF** button (`book.html?id=sysadmin_en`).
+Sale-ready **A4** premium interior PDF (cream paper edge-to-edge, web-matched print system). Uses the in-app **Save book as PDF** button (`book.html?id=sysadmin_en`).
 
 ## Steps
 
 1. Open `book.html?id=sysadmin_en` in **Google Chrome** (local server or file origin that can load scripts).
-2. Click **Save book as PDF (A4)**. A preview window opens and the print dialog appears.
+2. Click **Save book as PDF**. A preview window opens and the print dialog appears.
 3. In the print dialog:
    - Destination: **Save as PDF**
    - Paper size: **A4**
-   - Margins: **Default** (layout already sets ~20mm / 18mm in CSS)
-   - **Background graphics: ON** (required for teal accent rules and soft code backgrounds)
-   - Headers and footers: **Off** (page numbers come from the book footers)
+   - Margins: **Default** (CSS `@page` sets unified 14/14/16/14 mm — do not use None)
+   - **Background graphics: ON** (full-page cream via fixed layer)
+   - Headers and footers: **Off**
 4. Save the file (e.g. `Mission-Admin.pdf`).
 
 ## What to spot-check
