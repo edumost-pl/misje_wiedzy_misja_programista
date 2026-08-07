@@ -59,12 +59,12 @@ window.BOOK_SYSADMIN_EN = {
       "The subject index helps you find a topic fast: Pi, Linux, commands, SSH, game server files.",
   },
   parts: [
-    { id: 1, title: "What Is a Raspberry Pi?", chapters: [1, 2, 3] },
-    { id: 2, title: "Tour of the Board", chapters: [4, 5, 6, 7, 8, 9, 10] },
-    { id: 3, title: "First Boot", chapters: [11, 12, 13, 14] },
-    { id: 4, title: "What Is Linux?", chapters: [15, 16, 17] },
-    { id: 5, title: "Raspberry Pi OS", chapters: [18, 19, 20] },
-    { id: 6, title: "The Terminal", chapters: [21, 22] },
+    { id: 1, title: "Meet the Raspberry Pi", chapters: [1, 2, 3] },
+    { id: 2, title: "Linux", chapters: [4, 5, 6, 7, 8, 9, 10] },
+    { id: 3, title: "System Administrator", chapters: [11, 12, 13, 14] },
+    { id: 4, title: "Networks", chapters: [15, 16, 17] },
+    { id: 5, title: "Your Game Server", chapters: [18, 19, 20] },
+    { id: 6, title: "What's Next?", chapters: [21, 22] },
   ],
   chapters: [
     { id: 1, title: "What Is a Raspberry Pi?", icon: "pi", part: 1 },

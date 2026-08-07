@@ -2677,7 +2677,7 @@
     );
   }
 
-  function pdfPartArtSrc(partId) {
+  function pdfPartArtSrc(partId, bookId) {
     var map = {
       1: "part-01-pi",
       2: "part-02-linux",
@@ -2687,7 +2687,7 @@
       6: "part-06-next",
     };
     var key = map[partId];
-    return key ? absoluteAssetUrl(illPath(key)) : "";
+    return key ? absoluteAssetUrl(illPath(key, bookId)) : "";
   }
 
   function buildBookPdfDocument(book, chapters) {
@@ -2716,9 +2716,9 @@
             })
             .map(function (ch) {
               return (
-                "<li>" +
+                "<li><span class=\"book-pdf__toc-num\">" +
                 ch.id +
-                ". " +
+                ".</span> " +
                 escapeHtml(ch.title) +
                 "</li>"
               );
@@ -2730,9 +2730,9 @@
             part.id +
             ". " +
             escapeHtml(part.title) +
-            "</h3><ol>" +
+            "</h3><ul>" +
             items +
-            "</ol></div>"
+            "</ul></div>"
           );
         })
         .join("");
@@ -2769,9 +2769,9 @@
         return (
           '<article class="book-pdf__chapter">' +
           '<p class="book-pdf__ch-label">' +
-          (enPdf ? "Part " : "Частина ") +
+          (enPdf ? "Part " : ukPdf ? "Частина " : "Część ") +
           (ch.part || "") +
-          (enPdf ? " · Chapter " : " · Розділ ") +
+          (enPdf ? " · Chapter " : ukPdf ? " · Розділ " : " · Rozdział ") +
           ch.id +
           " / " +
           book.chaptersCount +
@@ -2784,7 +2784,7 @@
           "</div>" +
           '<p class="book-pdf__footer">' +
           escapeHtml(book.title) +
-          (enPdf ? " · Chapter " : " · Розділ ") +
+          (enPdf ? " · Chapter " : ukPdf ? " · Розділ " : " · Rozdział ") +
           ch.id +
           "</p></article>"
         );
@@ -2848,11 +2848,11 @@
 
     if (parts.length && book.format === "nonfiction") {
       parts.forEach(function (part) {
-        var art = pdfPartArtSrc(part.id);
+        var art = pdfPartArtSrc(part.id, book.id);
         bodyHtml +=
           '<section class="book-pdf__part">' +
           '<p class="book-pdf__part-label">' +
-          (enPdf ? "Part " : "Частина ") +
+          (enPdf ? "Part " : ukPdf ? "Частина " : "Część ") +
           part.id +
           "</p>" +
           "<h1>" +
@@ -2931,6 +2931,11 @@
       '<section class="book-pdf__front"><h2>' +
       (enPdf ? "How to use this book" : "Як користуватися книгою") +
       "</h2>" +
+      (book.description
+        ? "<p>" +
+          escapeHtml(String(book.description).replace(/\*\*/g, "")) +
+          "</p>"
+        : "") +
       (fm.preface
         ? "<p>" + escapeHtml(String(fm.preface).replace(/\*\*/g, "")) + "</p>"
         : "") +
@@ -2981,11 +2986,6 @@
       " · ~" +
       book.readingMinutes +
       " min</p>" +
-      (book.description
-        ? '<p class="book-pdf__desc">' +
-          escapeHtml(String(book.description).replace(/\*\*/g, "")) +
-          "</p>"
-        : "") +
       "</div></header>";
 
     var backHtml = coverBack
@@ -3065,9 +3065,20 @@
   function exportBookPdf(bookId) {
     var btn = document.querySelector('[data-export-pdf="' + bookId + '"]');
     var prevLabel = btn ? btn.textContent : "";
+    var meta =
+      (window.LIBRARY && window.LIBRARY.getBook && window.LIBRARY.getBook(bookId)) ||
+      null;
+    var enExport =
+      (meta && meta.lang === "en") || bookId === "sysadmin_en" || /_en$/.test(bookId);
+    var ukExport =
+      (meta && meta.lang === "uk") || bookId === "sysadmin";
     if (btn) {
       btn.disabled = true;
-      btn.textContent = "Przygotowuję PDF…";
+      btn.textContent = enExport
+        ? "Preparing PDF…"
+        : ukExport
+          ? "Готую PDF…"
+          : "Przygotowuję PDF…";
     }
 
     loadScript("data/" + bookId + "/book.js")
@@ -3077,7 +3088,15 @@
       .then(function () {
         var book =
           window["BOOK_" + bookId.toUpperCase()] || window.BOOK_PROGRAMISTA;
-        if (!book) throw new Error("Brak danych książki");
+        if (!book) {
+          throw new Error(
+            enExport
+              ? "Book data missing"
+              : ukExport
+                ? "Немає даних книги"
+                : "Brak danych książki"
+          );
+        }
         var loads = [];
         for (var i = 1; i <= book.chaptersCount; i++) {
           loads.push(
@@ -3099,14 +3118,23 @@
         var chapters = [];
         for (var i = 1; i <= book.chaptersCount; i++) {
           var ch = window["CHAPTER_" + String(i).padStart(2, "0")];
-          if (!ch) throw new Error("Brak rozdziału " + i);
+          if (!ch) {
+            throw new Error(
+              (enExport ? "Missing chapter " : ukExport ? "Немає розділу " : "Brak rozdziału ") +
+                i
+            );
+          }
           chapters.push(ch);
         }
         var html = buildBookPdfDocument(book, chapters);
         var win = window.open("", "_blank");
         if (!win) {
           throw new Error(
-            "Przeglądarka zablokowała okno. Pozwól na wyskakujące okna i spróbuj ponownie."
+            enExport
+              ? "The browser blocked the window. Allow pop-ups and try again."
+              : ukExport
+                ? "Браузер заблокував вікно. Дозволь спливаючі вікна і спробуй знову."
+                : "Przeglądarka zablokowała okno. Pozwól na wyskakujące okna i spróbuj ponownie."
           );
         }
         win.document.open();
@@ -3114,7 +3142,14 @@
         win.document.close();
       })
       .catch(function (err) {
-        alert(err.message || "Nie udało się przygotować PDF.");
+        alert(
+          err.message ||
+            (enExport
+              ? "Could not prepare the PDF."
+              : ukExport
+                ? "Не вдалося підготувати PDF."
+                : "Nie udało się przygotować PDF.")
+        );
       })
       .then(function () {
         if (btn) {
